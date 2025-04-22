@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { kanadaFont, wageFont } from "./fonts";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Mind Goblin Studios | Indie Game Development",
-  description: "Welcome to Mind Goblin Studios - Crafting unique gaming experiences through innovative indie game development.",
+  description: "We making vidya games",
 };
 
 export default function RootLayout({
@@ -15,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`scroll-smooth `}>
       <body className={`${inter.className} bg-gray-950 text-white`}>
         {children}
       </body>

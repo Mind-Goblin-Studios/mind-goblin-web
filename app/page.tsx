@@ -1,6 +1,15 @@
+'use client';
+
 import Image from "next/image";
+import ScrollButton from "./components/ScrollButton";
+import ContactModal from "./components/ContactModal";
+import game01Image from "./assets/game_01.jpg";
+import mglogo2Image from "./assets/mglogo2.png";
+import { useState } from "react";
 
 export default function Home() {
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
@@ -16,72 +25,56 @@ export default function Home() {
           />
         </div>
         <div className="relative z-20 text-center px-4">
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-clip-text text-transparent hero-gradient">
+          <h1 className="text-6xl md:text-8xl mb-6 font-bold bg-clip-text text-transparent hero-gradient title-font pt-4">
             Mind Goblin Studios
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Next level indie game development studio
           </p>
-          <button className="btn-primary">
+          <ScrollButton targetId="games-section">
             Explore Our Games
-          </button>
+          </ScrollButton>
         </div>
       </section>
 
       {/* About Section */}
-      <section className="py-20 px-4">
+      {/* <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <h2 className="section-title text-center">About Us</h2>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <p className="text-lg text-gray-300">
-               Welcome to the goblin lmao
+               Welcome to the goblin lmao 
               </p>
               <p className="text-lg text-gray-300">
-                
+                We are a small indie game development studio that is passionate about creating unique and engaging games.
               </p>
             </div>
-            <div className="relative h-80 rounded-xl overflow-hidden">
+            <div className="image-container relative h-80 rounded-xl overflow-hidden">
               <Image
-                src="/studio-image.jpg"
-                alt="Mind Goblin Studios Team"
+                src={mglogo2Image}
+                alt="Mind Goblin Studios Logo"
                 fill
-                className="object-cover"
+                className="object-contain rounded-xl"
               />
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Games Section */}
-      <section className="py-20 px-4 bg-gray-900">
+      <section id="games-section" className="py-20 px-4 bg-gray-900">
         <div className="max-w-6xl mx-auto">
           <h2 className="section-title text-center">Our Games</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Game Card 1 */}
-            {/* <div className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300">
-              <div className="relative h-48">
-                <Image
-                  src="/game-placeholder-1.jpg"
-                  alt="Game 1"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-bold mb-2">Coming Soon</h3>
-                <p className="text-gray-400">
-                  An exciting new adventure awaits...
-                </p>
-              </div>
-            </div> */}
+            
 
-            {/* Game Card 2 */}
+            {/* Game Card */}
             <div className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300">
               <div className="relative h-48">
                 <Image
-                  src="/game-placeholder-2.jpg"
-                  alt="Game 2"
+                  src={game01Image}
+                  alt="Game"
                   fill
                   className="object-cover"
                 />
@@ -89,28 +82,12 @@ export default function Home() {
               <div className="p-6">
                 <h3 className="text-2xl font-bold mb-2">In Development</h3>
                 <p className="text-gray-400">
-                  Something special is brewing...
+                  We're working on something special...
                 </p>
               </div>
             </div>
 
-            {/* Game Card 3 */}
-            {/* <div className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300">
-              <div className="relative h-48">
-                <Image
-                  src="/game-placeholder-3.jpg"
-                  alt="Game 3"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-bold mb-2">Coming 2024</h3>
-                <p className="text-gray-400">
-                  Stay tuned for our next big release...
-                </p>
-              </div>
-            </div> */}
+         
           </div>
         </div>
       </section>
@@ -122,11 +99,19 @@ export default function Home() {
           <p className="text-lg text-gray-300 mb-8">
             Interested in our work? Want to collaborate? We'd love to hear from you!
           </p>
-          <button className="btn-primary">
+          <button 
+            className="btn-primary"
+            onClick={() => setIsContactModalOpen(true)}
+          >
             Contact Us
           </button>
         </div>
       </section>
+
+      <ContactModal 
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </main>
   );
 }
