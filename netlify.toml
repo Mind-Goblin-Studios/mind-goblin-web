@@ -7,3 +7,9 @@
 
 [build.environment]
   NEXT_PUBLIC_BASE_PATH = "" 
+
+[[redirects]]
+  from = "https://mindgoblin.org"
+  to = "https://mindgoblin.gg"
+  status = 301
+  force = true
