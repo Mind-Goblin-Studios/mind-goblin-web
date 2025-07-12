@@ -4,7 +4,7 @@
 export default function FormsPage() {
   return (
     <div style={{ display: 'none' }}>
-      <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field">
+      <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true">
         <input type="text" name="name" />
         <input type="email" name="email" />
         <textarea name="message"></textarea>

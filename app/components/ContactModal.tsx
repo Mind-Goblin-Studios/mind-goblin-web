@@ -122,16 +122,26 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
     // Submit to Netlify using their exact specification
     try {
-      const myForm = e.target as HTMLFormElement;
-      const formData = new FormData(myForm);
+      // Only include fields that Netlify expects (matching our detection form)
+      const netlifyFormData = new FormData();
+      netlifyFormData.append('form-name', 'contact');
+      netlifyFormData.append('name', formData.name);
+      netlifyFormData.append('email', formData.email);
+      netlifyFormData.append('message', formData.message);
+      netlifyFormData.append('bot-field', formData['bot-field']);
+      if (recaptchaToken) {
+        netlifyFormData.append('g-recaptcha-response', recaptchaToken);
+      }
       
       const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString()
+        body: new URLSearchParams(netlifyFormData as any).toString()
       });
 
-      if (response.ok) {
+      // Netlify Forms returns 3xx redirects (like 303) on successful submission
+      // This is normal behavior to prevent duplicate submissions
+      if (response.ok || (response.status >= 300 && response.status < 400)) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
         setRecaptchaToken(null);
