@@ -120,52 +120,23 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     //   return;
     // }
 
-    // If all validations pass, create a form and submit it naturally
+    // If all validations pass, submit the actual form naturally
     console.log('All validations passed, submitting to Netlify...');
     
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '/';
-    form.setAttribute('data-netlify', 'true');
-    form.style.display = 'none';
-
-    // Add form fields
-    const fields = [
-      { name: 'form-name', value: 'contact' },
-      { name: 'name', value: formData.name },
-      { name: 'email', value: formData.email },
-      { name: 'message', value: formData.message }
-    ];
-
-    fields.forEach(field => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = field.name;
-      input.value = field.value;
-      form.appendChild(input);
-    });
-
-    // Add reCAPTCHA if present
-    if (recaptchaToken) {
-      const recaptchaInput = document.createElement('input');
-      recaptchaInput.type = 'hidden';
-      recaptchaInput.name = 'g-recaptcha-response';
-      recaptchaInput.value = recaptchaToken;
-      form.appendChild(recaptchaInput);
-    }
-
-    document.body.appendChild(form);
-    
-    // Show success immediately and submit
+    // Show success message briefly, then submit
     setSubmitStatus('success');
-    setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
-    setRecaptchaToken(null);
-    if (recaptchaRef.current) {
-      recaptchaRef.current.reset();
-    }
     
-    // Submit the form naturally - this will redirect away from the modal
-    form.submit();
+    // Wait a moment to show success message, then submit the form
+    setTimeout(() => {
+      // Remove the preventDefault behavior by directly submitting the form
+      const form = e.target as HTMLFormElement;
+      
+      // Add the action attribute to ensure proper submission
+      form.action = '/';
+      
+      // Submit the form naturally - this will redirect to thank you page
+      form.submit();
+    }, 1000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -198,6 +169,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           className="space-y-4" 
           name="contact"
           method="POST"
+          action="/"
           data-netlify="true"
           data-netlify-honeypot="bot-field"
           data-netlify-recaptcha="true"
