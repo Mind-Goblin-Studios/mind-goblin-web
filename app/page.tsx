@@ -31,9 +31,9 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Next level indie game development studio
           </p>
-          <ScrollButton targetId="games-section">
+          {/* <ScrollButton targetId="games-section">
             Explore Our Games
-          </ScrollButton>
+          </ScrollButton> */}
         </div>
       </section>
 
