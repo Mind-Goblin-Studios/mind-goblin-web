@@ -113,31 +113,42 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       return;
     }
 
-    // Check reCAPTCHA
-    if (!recaptchaToken) {
-      setSubmitStatus('error');
-      setIsSubmitting(false);
-      return;
-    }
+    // Check reCAPTCHA - temporarily disabled for testing
+    // if (!recaptchaToken) {
+    //   setSubmitStatus('error');
+    //   setIsSubmitting(false);
+    //   return;
+    // }
 
     // Submit to Netlify using their exact specification
     try {
-      // Only include fields that Netlify expects (matching our detection form)
+      // Start with absolute minimum to test basic functionality
       const netlifyFormData = new FormData();
       netlifyFormData.append('form-name', 'contact');
       netlifyFormData.append('name', formData.name);
       netlifyFormData.append('email', formData.email);
       netlifyFormData.append('message', formData.message);
-      netlifyFormData.append('bot-field', formData['bot-field']);
+      
+      // Only add reCAPTCHA if it exists and is valid
       if (recaptchaToken) {
         netlifyFormData.append('g-recaptcha-response', recaptchaToken);
       }
+      
+      console.log('Submitting form with data:', {
+        'form-name': 'contact',
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        'has-recaptcha': !!recaptchaToken
+      });
       
       const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(netlifyFormData as any).toString()
       });
+
+      console.log('Response status:', response.status, response.statusText);
 
       // Netlify Forms returns 3xx redirects (like 303) on successful submission
       // This is normal behavior to prevent duplicate submissions
@@ -153,6 +164,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           setSubmitStatus('idle');
         }, 2000);
       } else {
+        console.error('Form submission failed:', response.status, response.statusText);
         setSubmitStatus('error');
         if (recaptchaRef.current) {
           recaptchaRef.current.reset();
@@ -310,7 +322,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           <button
             type="submit"
             className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isSubmitting || !recaptchaToken}
+            disabled={isSubmitting}
           >
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </button>
