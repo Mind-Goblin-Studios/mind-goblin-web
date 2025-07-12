@@ -24,7 +24,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // reCAPTCHA site key - you'll need to get this from Google reCAPTCHA admin
-  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
   // Generate a simple math challenge
   const generateMathChallenge = () => {
@@ -52,7 +52,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         question = `${num1} × ${num2}`;
         break;
     }
-    
+  
     setMathChallenge({ question, answer });
   };
 
