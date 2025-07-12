@@ -82,10 +82,9 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-
+    // Only prevent default to run our validation checks
+    // If validation passes, we'll allow the form to submit naturally
+    
     // Anti-bot checks
     const submissionTime = Date.now();
     const timeTaken = submissionTime - formOpenTime;
@@ -93,76 +92,37 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     // Check if honeypot field is filled (bot detection)
     if (formData['bot-field']) {
       console.log('Bot detected: honeypot field filled');
+      e.preventDefault();
       setSubmitStatus('error');
-      setIsSubmitting(false);
       return;
     }
 
     // Check if form was submitted too quickly (likely a bot)
     if (timeTaken < 3000) { // Less than 3 seconds
       console.log('Bot detected: form submitted too quickly');
+      e.preventDefault();
       setSubmitStatus('error');
-      setIsSubmitting(false);
       return;
     }
 
     // Check math challenge
     if (parseInt(formData.mathAnswer) !== mathChallenge.answer) {
+      e.preventDefault();
       setSubmitStatus('error');
-      setIsSubmitting(false);
       return;
     }
 
     // Check reCAPTCHA
     if (!recaptchaToken) {
+      e.preventDefault();
       setSubmitStatus('error');
-      setIsSubmitting(false);
       return;
     }
 
-    try {
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'contact',
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-          'g-recaptcha-response': recaptchaToken
-        }).toString()
-      });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
-        setRecaptchaToken(null);
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
-        setTimeout(() => {
-          onClose();
-          setSubmitStatus('idle');
-        }, 2000);
-      } else {
-        setSubmitStatus('error');
-        // Reset reCAPTCHA on error
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
-        setRecaptchaToken(null);
-      }
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setSubmitStatus('error');
-      // Reset reCAPTCHA on error
-      if (recaptchaRef.current) {
-        recaptchaRef.current.reset();
-      }
-      setRecaptchaToken(null);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // If all validations pass, let the form submit naturally to Netlify
+    // Don't preventDefault() here - let Netlify handle it
+    setSubmitStatus('success');
+    setIsSubmitting(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -204,7 +164,15 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           <div data-netlify-recaptcha="true"></div>
         </form>
 
-        <form onSubmit={handleSubmit} className="space-y-4" name="contact">
+        <form 
+          onSubmit={handleSubmit} 
+          className="space-y-4" 
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+          data-netlify-recaptcha="true"
+        >
           <input type="hidden" name="form-name" value="contact" />
           
           {/* Honeypot field - hidden from users but visible to bots */}
