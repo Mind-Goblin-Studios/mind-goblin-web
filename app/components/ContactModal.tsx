@@ -150,20 +150,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           </button>
         </div>
 
-        {/* Hidden form for Netlify detection */}
-        <form
-          name="contact"
-          data-netlify="true"
-          data-netlify-honeypot="bot-field"
-          hidden
-        >
-          <input type="text" name="name" />
-          <input type="email" name="email" />
-          <textarea name="message"></textarea>
-          <input type="text" name="bot-field" />
-          <div data-netlify-recaptcha="true"></div>
-        </form>
-
         <form 
           onSubmit={handleSubmit} 
           className="space-y-4" 
