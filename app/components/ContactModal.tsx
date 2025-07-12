@@ -13,7 +13,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     name: '',
     email: '',
     message: '',
-    honeypot: '', // Hidden field for bot detection
+    'bot-field': '', // Hidden field for bot detection
     mathAnswer: '' // Math challenge answer
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,7 +65,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         name: '',
         email: '',
         message: '',
-        honeypot: '',
+        'bot-field': '',
         mathAnswer: ''
       });
       setRecaptchaToken(null);
@@ -91,7 +91,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     const timeTaken = submissionTime - formOpenTime;
 
     // Check if honeypot field is filled (bot detection)
-    if (formData.honeypot) {
+    if (formData['bot-field']) {
       console.log('Bot detected: honeypot field filled');
       setSubmitStatus('error');
       setIsSubmitting(false);
@@ -135,7 +135,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ name: '', email: '', message: '', honeypot: '', mathAnswer: '' });
+        setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
         setRecaptchaToken(null);
         if (recaptchaRef.current) {
           recaptchaRef.current.reset();
@@ -190,32 +190,31 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           </button>
         </div>
 
-        {/* Hidden form for Netlify */}
+        {/* Hidden form for Netlify detection */}
         <form
           name="contact"
-          method="POST"
           data-netlify="true"
           data-netlify-honeypot="bot-field"
-          data-netlify-recaptcha="true"
           hidden
         >
           <input type="text" name="name" />
           <input type="email" name="email" />
           <textarea name="message"></textarea>
+          <input type="text" name="bot-field" />
           <div data-netlify-recaptcha="true"></div>
         </form>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" name="contact">
           <input type="hidden" name="form-name" value="contact" />
           
           {/* Honeypot field - hidden from users but visible to bots */}
           <div style={{ display: 'none' }}>
-            <label htmlFor="honeypot">Don't fill this out if you're human:</label>
+            <label htmlFor="bot-field">Don't fill this out if you're human:</label>
             <input
               type="text"
-              id="honeypot"
-              name="honeypot"
-              value={formData.honeypot}
+              id="bot-field"
+              name="bot-field"
+              value={formData['bot-field']}
               onChange={handleChange}
               tabIndex={-1}
               autoComplete="off"
