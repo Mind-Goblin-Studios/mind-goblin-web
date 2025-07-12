@@ -206,6 +206,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         </form>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <input type="hidden" name="form-name" value="contact" />
+          
           {/* Honeypot field - hidden from users but visible to bots */}
           <div style={{ display: 'none' }}>
             <label htmlFor="honeypot">Don't fill this out if you're human:</label>
