@@ -141,17 +141,28 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         message: formData.message,
         'has-recaptcha': !!recaptchaToken
       });
+
+      // Convert FormData to URLSearchParams for logging
+      const urlParams = new URLSearchParams(netlifyFormData as any);
+      console.log('URL-encoded body:', urlParams.toString());
       
       const response = await fetch('/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(netlifyFormData as any).toString()
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: urlParams.toString()
       });
 
       console.log('Response status:', response.status, response.statusText);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      
+      // Log response body for debugging
+      const responseText = await response.text();
+      console.log('Response body preview:', responseText.substring(0, 200));
 
       // Netlify Forms returns 3xx redirects (like 303) on successful submission
-      // This is normal behavior to prevent duplicate submissions
+      // 200 might indicate the form isn't being processed by Netlify
       if (response.ok || (response.status >= 300 && response.status < 400)) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
