@@ -120,78 +120,52 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     //   return;
     // }
 
-    // Submit to Netlify using their exact specification
-    try {
-      // Start with absolute minimum to test basic functionality
-      const netlifyFormData = new FormData();
-      netlifyFormData.append('form-name', 'contact');
-      netlifyFormData.append('name', formData.name);
-      netlifyFormData.append('email', formData.email);
-      netlifyFormData.append('message', formData.message);
-      
-      // Only add reCAPTCHA if it exists and is valid
-      if (recaptchaToken) {
-        netlifyFormData.append('g-recaptcha-response', recaptchaToken);
-      }
-      
-      console.log('Submitting form with data:', {
-        'form-name': 'contact',
-        name: formData.name,
-        email: formData.email,
-        message: formData.message,
-        'has-recaptcha': !!recaptchaToken
-      });
+    // If all validations pass, create a form and submit it naturally
+    console.log('All validations passed, submitting to Netlify...');
+    
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/';
+    form.setAttribute('data-netlify', 'true');
+    form.style.display = 'none';
 
-      // Convert FormData to URLSearchParams for logging
-      const urlParams = new URLSearchParams(netlifyFormData as any);
-      console.log('URL-encoded body:', urlParams.toString());
-      
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: urlParams.toString()
-      });
+    // Add form fields
+    const fields = [
+      { name: 'form-name', value: 'contact' },
+      { name: 'name', value: formData.name },
+      { name: 'email', value: formData.email },
+      { name: 'message', value: formData.message }
+    ];
 
-      console.log('Response status:', response.status, response.statusText);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-      
-      // Log response body for debugging
-      const responseText = await response.text();
-      console.log('Response body preview:', responseText.substring(0, 200));
+    fields.forEach(field => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = field.name;
+      input.value = field.value;
+      form.appendChild(input);
+    });
 
-      // Netlify Forms returns 3xx redirects (like 303) on successful submission
-      // 200 might indicate the form isn't being processed by Netlify
-      if (response.ok || (response.status >= 300 && response.status < 400)) {
-        setSubmitStatus('success');
-        setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
-        setRecaptchaToken(null);
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
-        setTimeout(() => {
-          onClose();
-          setSubmitStatus('idle');
-        }, 2000);
-      } else {
-        console.error('Form submission failed:', response.status, response.statusText);
-        setSubmitStatus('error');
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
-        }
-        setRecaptchaToken(null);
-      }
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setSubmitStatus('error');
-      if (recaptchaRef.current) {
-        recaptchaRef.current.reset();
-      }
-      setRecaptchaToken(null);
-    } finally {
-      setIsSubmitting(false);
+    // Add reCAPTCHA if present
+    if (recaptchaToken) {
+      const recaptchaInput = document.createElement('input');
+      recaptchaInput.type = 'hidden';
+      recaptchaInput.name = 'g-recaptcha-response';
+      recaptchaInput.value = recaptchaToken;
+      form.appendChild(recaptchaInput);
     }
+
+    document.body.appendChild(form);
+    
+    // Show success immediately and submit
+    setSubmitStatus('success');
+    setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
+    setRecaptchaToken(null);
+    if (recaptchaRef.current) {
+      recaptchaRef.current.reset();
+    }
+    
+    // Submit the form naturally - this will redirect away from the modal
+    form.submit();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
