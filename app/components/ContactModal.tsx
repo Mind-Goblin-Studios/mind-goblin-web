@@ -82,9 +82,10 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    // Only prevent default to run our validation checks
-    // If validation passes, we'll allow the form to submit naturally
-    
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
     // Anti-bot checks
     const submissionTime = Date.now();
     const timeTaken = submissionTime - formOpenTime;
@@ -92,37 +93,72 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     // Check if honeypot field is filled (bot detection)
     if (formData['bot-field']) {
       console.log('Bot detected: honeypot field filled');
-      e.preventDefault();
       setSubmitStatus('error');
+      setIsSubmitting(false);
       return;
     }
 
     // Check if form was submitted too quickly (likely a bot)
     if (timeTaken < 3000) { // Less than 3 seconds
       console.log('Bot detected: form submitted too quickly');
-      e.preventDefault();
       setSubmitStatus('error');
+      setIsSubmitting(false);
       return;
     }
 
     // Check math challenge
     if (parseInt(formData.mathAnswer) !== mathChallenge.answer) {
-      e.preventDefault();
       setSubmitStatus('error');
+      setIsSubmitting(false);
       return;
     }
 
     // Check reCAPTCHA
     if (!recaptchaToken) {
-      e.preventDefault();
       setSubmitStatus('error');
+      setIsSubmitting(false);
       return;
     }
 
-    // If all validations pass, let the form submit naturally to Netlify
-    // Don't preventDefault() here - let Netlify handle it
-    setSubmitStatus('success');
-    setIsSubmitting(true);
+    // Submit to Netlify using their exact specification
+    try {
+      const myForm = e.target as HTMLFormElement;
+      const formData = new FormData(myForm);
+      
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString()
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', message: '', 'bot-field': '', mathAnswer: '' });
+        setRecaptchaToken(null);
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setTimeout(() => {
+          onClose();
+          setSubmitStatus('idle');
+        }, 2000);
+      } else {
+        setSubmitStatus('error');
+        if (recaptchaRef.current) {
+          recaptchaRef.current.reset();
+        }
+        setRecaptchaToken(null);
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setRecaptchaToken(null);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
