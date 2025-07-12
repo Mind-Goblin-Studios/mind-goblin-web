@@ -5,11 +5,13 @@
 </head>
 <body>
     <!-- This form is for Netlify detection only - users won't see this -->
-    <form name="contact" method="POST" action="/" data-netlify="true" style="display: none;">
+    <form name="contact" method="POST" action="/" data-netlify="true" data-netlify-honeypot="bot-field" style="display: none;">
         <input type="hidden" name="form-name" value="contact" />
+        <input type="text" name="bot-field" />
         <input type="text" name="name" />
         <input type="email" name="email" />
         <textarea name="message"></textarea>
+        <input type="number" name="mathAnswer" />
     </form>
 </body>
 </html> 
