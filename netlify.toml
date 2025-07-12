@@ -8,6 +8,17 @@
 [build.environment]
   NEXT_PUBLIC_BASE_PATH = "" 
 
+# Form notifications configuration
+[[forms]]
+  name = "contact"
+  submit_enabled = true
+  
+  [[forms.notifications]]
+    type = "email"
+    recipients = ["info@mindgoblin.gg"]
+    subject = "New contact form submission from Mind Goblin Games website"
+    body = "Name: {{name}}\nEmail: {{email}}\nMessage: {{message}}"
+
 [[redirects]]
   from = "https://mindgoblin.org"
   to = "https://mindgoblin.gg"

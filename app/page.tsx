@@ -26,7 +26,7 @@ export default function Home() {
         </div>
         <div className="relative z-20 text-center px-4">
           <h1 className="text-6xl md:text-8xl mb-6 font-bold bg-clip-text text-transparent hero-gradient title-font pt-4">
-            Mind Goblin Studios
+            Mind Goblin Games
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
             Next level indie game development studio
@@ -64,13 +64,13 @@ export default function Home() {
 
 
       {/* Games Section */}
-      <section id="games-section" className="py-20 px-4 bg-gray-900">
+      {/* <section id="games-section" className="py-20 px-4 bg-gray-900">
         <div className="max-w-6xl mx-auto">
           <h2 className="section-title text-center">Our Games</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             
 
-            {/* Game Card */}
+         
             <div className="bg-gray-800 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300">
               <div className="relative h-48">
                 <Image
@@ -91,7 +91,7 @@ export default function Home() {
          
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Contact Section */}
       <section className="py-20 px-4">

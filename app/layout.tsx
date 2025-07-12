@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mind Goblin Studios | Indie Game Development",
-  description: "We making vidya games",
+  title: "Mind Goblin",
+  description: "Next level indie game development",
 };
 
 export default function RootLayout({
