@@ -81,6 +81,14 @@ export default function FuturisticHero() {
           delay: 2000,
         });
       });
+
+      // Fill in the text with white after the draw animation completes
+      animate('.draw-text', {
+        fill: ['rgba(255,255,255,0)', 'rgba(255,255,255,1)'],
+        duration: 1500,
+        ease: 'inOutSine',
+        delay: 5000,
+      });
     }
 
     // Intro animation for side text
@@ -150,7 +158,7 @@ export default function FuturisticHero() {
       </div>
 
       {/* Center sphere with Mind Goblin */}
-      <div className="relative w-[440px] h-[440px] md:w-[565px] md:h-[565px] lg:w-[625px] lg:h-[625px]">
+      <div className="relative w-[485px] h-[485px] md:w-[620px] md:h-[620px] lg:w-[690px] lg:h-[690px]">
         
         {/* The Sphere Animation */}
         <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center">
