@@ -82,6 +82,15 @@ export default function FuturisticHero() {
 
     // Animate the Mind Goblin SVG text drawing
     if (textSvgRef.current) {
+      // First, make the SVG visible
+      animate('.mind-goblin-text', {
+        opacity: [0, 1],
+        visibility: 'visible',
+        duration: 300,
+        ease: 'outQuad',
+        delay: 1800,
+      });
+      
       const textPaths = textSvgRef.current.querySelectorAll('.draw-text');
       
       // Create drawable for each text path
@@ -158,6 +167,7 @@ export default function FuturisticHero() {
       // Animate the "Games" text in
       animate('.games-text', {
         opacity: [0, 1],
+        visibility: 'visible',
         scale: [0.8, 1],
         duration: 800,
         ease: 'outExpo',
@@ -203,6 +213,10 @@ export default function FuturisticHero() {
         scale: [1, 0.8],
         duration: 500,
         ease: 'inOutQuad',
+        onComplete: () => {
+          const el = document.querySelector('.games-text') as HTMLElement;
+          if (el) el.style.visibility = 'hidden';
+        },
       });
       // Games mode side text fade out is handled in handleBackToHome
     }
@@ -306,16 +320,36 @@ export default function FuturisticHero() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setSubmitStatus('success');
-    
-    // Close modal after success
-    setTimeout(() => {
-      handleCloseContact();
-    }, 2000);
+    try {
+      // Submit to Netlify Forms
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'form-name': 'contact',
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }).toString(),
+      });
+
+      if (response.ok) {
+        setIsSubmitting(false);
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+        
+        // Close modal after success
+        setTimeout(() => {
+          handleCloseContact();
+        }, 2000);
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setIsSubmitting(false);
+      setSubmitStatus('error');
+    }
   };
 
   return (
@@ -417,6 +451,7 @@ export default function FuturisticHero() {
             ref={textSvgRef}
             viewBox="0 0 200 80" 
             className="mind-goblin-text w-64 md:w-72 lg:w-80 absolute"
+            style={{ opacity: 0, visibility: 'hidden' }}
           >
             <defs>
               <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -456,8 +491,8 @@ export default function FuturisticHero() {
 
           {/* Games Text - shown when in games mode */}
           <h2 
-            className="games-text text-5xl md:text-6xl lg:text-7xl font-bold text-white title-font absolute opacity-0"
-            style={{ fontFamily: 'var(--font-wage), sans-serif' }}
+            className="games-text text-5xl md:text-6xl lg:text-7xl font-bold text-white title-font absolute"
+            style={{ fontFamily: 'var(--font-wage), sans-serif', opacity: 0, visibility: 'hidden' }}
           >
             Games
           </h2>
@@ -611,7 +646,7 @@ export default function FuturisticHero() {
                 </h3>
                 <div className="modal-line h-[1px] bg-gradient-to-r from-[#ff4b4b] to-transparent origin-left" />
                 <p className="text-gray-400 mt-3 text-sm font-mono">
-                  // Initialize connection...
+                  Get in touch with the Mind Goblin Team
                 </p>
               </div>
 
@@ -625,8 +660,35 @@ export default function FuturisticHero() {
                   <p className="text-[#ff4b4b] font-mono text-lg">MESSAGE_SENT</p>
                   <p className="text-gray-400 mt-2">We&apos;ll be in touch soon.</p>
                 </div>
+              ) : submitStatus === 'error' ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-900/20 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </div>
+                  <p className="text-red-500 font-mono text-lg">TRANSMISSION_FAILED</p>
+                  <p className="text-gray-400 mt-2">Please try again later.</p>
+                  <button
+                    onClick={() => setSubmitStatus('idle')}
+                    className="mt-4 px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-[#ff4b4b] hover:text-white transition-all font-mono text-sm"
+                  >
+                    Try Again
+                  </button>
+                </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form 
+                  onSubmit={handleSubmit} 
+                  className="space-y-6"
+                  name="contact"
+                  method="POST"
+                  data-netlify="true"
+                  data-netlify-honeypot="bot-field"
+                >
+                  {/* Hidden fields for Netlify */}
+                  <input type="hidden" name="form-name" value="contact" />
+                  <input type="hidden" name="bot-field" />
+                  
                   {/* Name field */}
                   <div className="modal-field">
                     <label className="block text-xs font-mono text-[#ff4b4b] mb-2 uppercase tracking-wider">
@@ -635,6 +697,7 @@ export default function FuturisticHero() {
                     <div className="relative">
                       <input
                         type="text"
+                        name="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         required
@@ -653,6 +716,7 @@ export default function FuturisticHero() {
                     <div className="relative">
                       <input
                         type="email"
+                        name="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
@@ -670,6 +734,7 @@ export default function FuturisticHero() {
                     </label>
                     <div className="relative">
                       <textarea
+                        name="message"
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         required
