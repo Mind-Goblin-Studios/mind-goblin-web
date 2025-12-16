@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { animate, stagger, createTimeline, createDrawable } from 'animejs';
 
-export default function FuturisticHero() {
+export default function Main() {
   const containerRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
   const textSvgRef = useRef<SVGSVGElement>(null);
@@ -682,7 +682,7 @@ export default function FuturisticHero() {
               strokeWidth="0.3"
               fontSize="40"
               fontWeight="bold"
-              fontFamily="var(--font-wage), sans-serif"
+              fontFamily="Inter, system-ui, sans-serif"
             >
               Mind
             </text>
@@ -696,7 +696,7 @@ export default function FuturisticHero() {
               strokeWidth="0.3"
               fontSize="40"
               fontWeight="bold"
-              fontFamily="var(--font-wage), sans-serif"
+              fontFamily="Inter, system-ui, sans-serif"
             >
               Goblin
             </text>
@@ -704,8 +704,8 @@ export default function FuturisticHero() {
 
           {/* Games Text - shown when in games mode */}
           <h2 
-            className="games-text text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white title-font absolute"
-            style={{ fontFamily: 'var(--font-wage), sans-serif', opacity: 0, visibility: 'hidden' }}
+            className="games-text text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white absolute"
+            style={{ fontFamily: 'Inter, system-ui, sans-serif', opacity: 0, visibility: 'hidden' }}
           >
             Games
           </h2>

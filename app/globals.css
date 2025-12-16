@@ -8,18 +8,6 @@
   --background-end-rgb: 0, 0, 0;
 }
 
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 @layer base {
   body {
     @apply bg-[#1a1a1a] text-white;
@@ -27,32 +15,12 @@
 }
 
 @layer components {
-  .hero-gradient {
-    @apply text-transparent bg-clip-text;
-    background-image: linear-gradient(90deg, #8b5cf6, #ec4899, #ef4444);
-    background-size: 200% 200%;
-    animation: gradientMove 8s ease infinite;
-  }
-  
-  .btn-primary {
-    @apply px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 
-           transition-all duration-300 text-white font-medium shadow-lg hover:shadow-xl;
-  }
-  
-  .section-title {
-    @apply text-4xl md:text-5xl font-bold mb-8 hero-gradient;
-  }
-
   .font-wage {
     font-family: var(--font-wage);
   }
 
   .title-font {
     @apply font-wage;
-  }
-
-  .image-container {
-    @apply rounded-lg overflow-hidden;
   }
 }
 
@@ -70,35 +38,15 @@
 }
 
 /* Sphere Animation Styles */
-.sphere-wrapper {
-  position: relative;
-  width: 100%;
-  padding-bottom: 100%;
-}
-
-.sphere-animation {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 580px;
-  height: 580px;
-  margin: -290px 0 0 -290px;
-}
-
 .sphere {
   overflow: visible;
 }
 
 .sphere path {
-  fill: url(#sphereGradient), url(#sphereGradientHero);
+  fill: url(#sphereGradientHero);
   stroke-width: 1px;
   stroke: rgba(80, 80, 80, 0.35);
   backface-visibility: hidden;
-}
-
-/* Hero sphere specific styling */
-.sphere path {
-  fill: url(#sphereGradientHero);
 }
 
 @media (min-width: 500px) {
@@ -107,91 +55,12 @@
   }
 }
 
-/* Scroll Animation Styles */
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-/* Radial gradient background */
-.bg-gradient-radial {
-  background: radial-gradient(ellipse at center, var(--tw-gradient-stops));
-}
-
-/* Floating particles */
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(139, 92, 246, 0.6);
-  border-radius: 50%;
-  animation: float 20s infinite ease-in-out;
-}
-
-.particle-1 {
-  top: 20%;
-  left: 10%;
-  animation-delay: 0s;
-  animation-duration: 25s;
-}
-
-.particle-2 {
-  top: 60%;
-  left: 80%;
-  animation-delay: -5s;
-  animation-duration: 20s;
-  background: rgba(236, 72, 153, 0.6);
-}
-
-.particle-3 {
-  top: 80%;
-  left: 30%;
-  animation-delay: -10s;
-  animation-duration: 22s;
-}
-
-.particle-4 {
-  top: 30%;
-  left: 70%;
-  animation-delay: -15s;
-  animation-duration: 18s;
-  background: rgba(239, 68, 68, 0.6);
-}
-
-.particle-5 {
-  top: 50%;
-  left: 50%;
-  animation-delay: -7s;
-  animation-duration: 24s;
-  background: rgba(139, 92, 246, 0.4);
-  width: 6px;
-  height: 6px;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.6;
-  }
-  25% {
-    transform: translate(100px, -50px) scale(1.2);
-    opacity: 0.8;
-  }
-  50% {
-    transform: translate(-50px, 100px) scale(0.8);
-    opacity: 0.4;
-  }
-  75% {
-    transform: translate(-100px, -100px) scale(1.1);
-    opacity: 0.7;
-  }
-}
-
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Hide scrollbar but keep functionality */
+/* Custom scrollbar */
 body::-webkit-scrollbar {
   width: 8px;
 }
@@ -201,10 +70,10 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #8b5cf6, #ec4899);
+  background: linear-gradient(180deg, #ff4b4b, #cc3333);
   border-radius: 4px;
 }
 
 body::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #a78bfa, #f472b6);
+  background: linear-gradient(180deg, #ff6b6b, #ff4b4b);
 }
