@@ -173,7 +173,7 @@ export default function FuturisticHero() {
         // Simulate depth - when y component indicates "behind" sphere
         // Behind when angle is between π/4 and 3π/4 (roughly top-back portion)
         if (angle > Math.PI * 0.2 && angle < Math.PI * 0.8) {
-          satellite1.style.opacity = '0.25';
+          satellite1.style.opacity = '0';
           satellite1.style.zIndex = '5';
           satellite1.style.filter = 'blur(1px)';
         } else {
@@ -217,7 +217,7 @@ export default function FuturisticHero() {
         
         // Simulate depth - opposite phase from satellite 1
         if (angle > Math.PI * 1.2 && angle < Math.PI * 1.8) {
-          satellite2.style.opacity = '0.25';
+          satellite2.style.opacity = '0';
           satellite2.style.zIndex = '5';
           satellite2.style.filter = 'blur(1px)';
         } else {
@@ -569,35 +569,49 @@ export default function FuturisticHero() {
           </svg>
         </div>
 
-        {/* Orbital paths and satellites */}
-        <div className="orbit-container absolute inset-0 pointer-events-none" style={{ overflow: 'visible' }}>
+        {/* Orbital paths - BACK half (behind sphere) */}
+        <div className="orbit-container-back absolute inset-0 pointer-events-none z-[5]" style={{ overflow: 'visible' }}>
           <svg className="w-full h-full" viewBox="0 0 440 440" style={{ overflow: 'visible' }}>
-            {/* Visible orbital path 1 - tilted ellipse (red satellite track) */}
-            <ellipse 
+            {/* Back half of orbital path 1 (red) - lower arc (where satellite goes behind) */}
+            <path 
               className="orbit-path-1"
-              cx="220" 
-              cy="220" 
-              rx="260" 
-              ry="100"
+              d="M 455.6 110.1 A 260 100 -25 0 1 -15.6 329.9"
               stroke="rgba(255,75,75,0.6)" 
               strokeWidth="1"
-            //   strokeDasharray="6 6"
               fill="none"
-              transform="rotate(-25 220 220)"
               style={{ opacity: 0 }}
             />
-            {/* Visible orbital path 2 - opposite tilt (purple satellite track) */}
-            <ellipse 
+            {/* Back half of orbital path 2 (purple) - lower arc (where satellite goes behind) */}
+            <path 
               className="orbit-path-2"
-              cx="220" 
-              cy="220" 
-              rx="280" 
-              ry="90"
+              d="M -22.5 80 A 280 90 30 0 1 462.5 360"
               stroke="rgba(168,85,247,0.6)" 
               strokeWidth="1"
-            //   strokeDasharray="6 6"
               fill="none"
-              transform="rotate(30 220 220)"
+              style={{ opacity: 0 }}
+            />
+          </svg>
+        </div>
+
+        {/* Orbital paths - FRONT half (in front of sphere) */}
+        <div className="orbit-container-front absolute inset-0 pointer-events-none z-[15]" style={{ overflow: 'visible' }}>
+          <svg className="w-full h-full" viewBox="0 0 440 440" style={{ overflow: 'visible' }}>
+            {/* Front half of orbital path 1 (red) - upper arc (where satellite passes in front) */}
+            <path 
+              className="orbit-path-1"
+              d="M 455.6 110.1 A 260 100 -25 0 0 -15.6 329.9"
+              stroke="rgba(255,75,75,0.6)" 
+              strokeWidth="1"
+              fill="none"
+              style={{ opacity: 0 }}
+            />
+            {/* Front half of orbital path 2 (purple) - upper arc (where satellite passes in front) */}
+            <path 
+              className="orbit-path-2"
+              d="M -22.5 80 A 280 90 30 0 0 462.5 360"
+              stroke="rgba(168,85,247,0.6)" 
+              strokeWidth="1"
+              fill="none"
               style={{ opacity: 0 }}
             />
           </svg>
