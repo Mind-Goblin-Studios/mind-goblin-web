@@ -82,31 +82,15 @@ export default function SphereAnimation() {
       delay: stagger(190, { start: (pathLength - 1) * 190, reversed: true }),
     }, 0);
 
-    // Shadow animation - moves the gradient
-    const gradientEl = document.getElementById('sphereGradient');
-    const shadowAnimation = gradientEl ? animate(gradientEl, {
-      attr: {
-        x1: '25%',
-        x2: '25%',
-        y1: '0%',
-        y2: '75%',
-      },
-      duration: 30000,
-      ease: 'outQuint',
-      autoplay: false,
-    }) : null;
-
     // Start all animations
     introAnimation.play();
     breathAnimationId = requestAnimationFrame(breathe);
-    shadowAnimation?.play();
 
     // Cleanup
     return () => {
       cleanupResize();
       introAnimation.pause();
       cancelAnimationFrame(breathAnimationId);
-      shadowAnimation?.pause();
     };
   }, []);
 
