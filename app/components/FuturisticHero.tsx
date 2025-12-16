@@ -170,10 +170,9 @@ export default function FuturisticHero() {
         satellite1.style.left = `${finalX}px`;
         satellite1.style.top = `${finalY}px`;
         
-        // Simulate depth - when y component indicates "behind" sphere
-        // Behind when angle is between π/4 and 3π/4 (roughly top-back portion)
+        // Simulate depth - when behind sphere, lower z-index so it naturally falls behind
         if (angle > Math.PI * 0.2 && angle < Math.PI * 0.8) {
-          satellite1.style.opacity = '0';
+          satellite1.style.opacity = '0.5';
           satellite1.style.zIndex = '5';
           satellite1.style.filter = 'blur(1px)';
         } else {
@@ -215,9 +214,9 @@ export default function FuturisticHero() {
         satellite2.style.left = `${finalX}px`;
         satellite2.style.top = `${finalY}px`;
         
-        // Simulate depth - opposite phase from satellite 1
+        // Simulate depth - when behind sphere, lower z-index so it naturally falls behind
         if (angle > Math.PI * 1.2 && angle < Math.PI * 1.8) {
-          satellite2.style.opacity = '0';
+          satellite2.style.opacity = '0.5';
           satellite2.style.zIndex = '5';
           satellite2.style.filter = 'blur(1px)';
         } else {
@@ -545,6 +544,8 @@ export default function FuturisticHero() {
                 <stop stopColor="#0D0D0C" offset="100%" />
               </linearGradient>
             </defs>
+            {/* Solid background circle to occlude elements behind the sphere */}
+            <circle cx="220" cy="220" r="175" fill="#1a1a1a" stroke="none" />
             <path d="M361.604 361.238c-24.407 24.408-51.119 37.27-59.662 28.727-8.542-8.543 4.319-35.255 28.726-59.663 24.408-24.407 51.12-37.269 59.663-28.726 8.542 8.543-4.319 35.255-28.727 59.662z" />
             <path d="M360.72 360.354c-35.879 35.88-75.254 54.677-87.946 41.985-12.692-12.692 6.105-52.067 41.985-87.947 35.879-35.879 75.254-54.676 87.946-41.984 12.692 12.692-6.105 52.067-41.984 87.946z" />
             <path d="M357.185 356.819c-44.91 44.91-94.376 68.258-110.485 52.149-16.11-16.11 7.238-65.575 52.149-110.485 44.91-44.91 94.376-68.259 110.485-52.15 16.11 16.11-7.239 65.576-52.149 110.486z" />
@@ -615,7 +616,10 @@ export default function FuturisticHero() {
               style={{ opacity: 0 }}
             />
           </svg>
-          
+        </div>
+
+        {/* Satellites - in their own container so z-index can interact with sphere */}
+        <div className="satellites-container absolute inset-0 pointer-events-none" style={{ overflow: 'visible' }}>
           {/* Satellite 1 - red */}
           <div 
             className="satellite-1 absolute rounded-full"
