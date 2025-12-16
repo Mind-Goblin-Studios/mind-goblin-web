@@ -261,13 +261,6 @@ export default function FuturisticHero() {
         </button>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-12 right-8 md:right-16 lg:right-24 flex flex-col items-center text-gray-500">
-        <span className="text-xs tracking-widest uppercase mb-2">Scroll</span>
-        <div className="w-5 h-8 border border-gray-600 rounded-full flex justify-center pt-2">
-          <div className="w-1 h-2 bg-gray-500 rounded-full animate-bounce" />
-        </div>
-      </div>
     </section>
   );
 }
