@@ -714,7 +714,7 @@ export default function FuturisticHero() {
 
       {/* Bottom buttons - hidden in games mode */}
       {!isGamesMode && (
-        <div className="bottom-buttons absolute bottom-4 md:bottom-12 left-4 md:left-16 lg:left-24 flex gap-2 md:gap-4 z-20">
+        <div className="bottom-buttons absolute bottom-8 md:bottom-12 left-4 md:left-16 lg:left-24 flex gap-2 md:gap-4 z-20">
           <button 
             onClick={handleShowGames}
             className="px-3 py-2 md:px-6 md:py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-1 md:gap-2 group"
@@ -737,7 +737,7 @@ export default function FuturisticHero() {
       )}
 
       {/* Social Media Links - visible in both modes */}
-      <div className="social-links absolute bottom-4 md:bottom-12 right-2 md:right-16 lg:right-24 flex gap-1 md:gap-4 z-20">
+      <div className="social-links absolute bottom-8 md:bottom-12 right-2 md:right-16 lg:right-24 grid grid-cols-2 gap-1 sm:flex sm:gap-1 md:gap-4 z-20">
           <a 
             href="https://www.instagram.com/mindgoblin.gg/" 
             target="_blank" 
@@ -835,7 +835,7 @@ export default function FuturisticHero() {
       {isGamesMode && (
         <button 
           onClick={handleBackToHome}
-          className="back-button absolute bottom-4 md:bottom-12 left-1/2 -translate-x-1/2 px-4 py-2 md:px-6 md:py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-1.5 md:gap-2 group z-20"
+          className="back-button absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 px-4 py-2 md:px-6 md:py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-1.5 md:gap-2 group z-20"
         >
           <svg className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
