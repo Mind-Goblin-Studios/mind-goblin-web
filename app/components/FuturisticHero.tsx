@@ -788,7 +788,7 @@ export default function FuturisticHero() {
       {isGamesMode && (
         <>
           {/* Mobile version - centered at top */}
-          <div className="games-left-text absolute inset-x-0 top-16 z-20 flex justify-center md:hidden opacity-0 px-4">
+          <div className="games-left-text absolute inset-x-0 top-24 z-20 flex justify-center md:hidden opacity-0 px-4">
             <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight text-center">
               The Mind Goblin team<br />
               is hard at work.
