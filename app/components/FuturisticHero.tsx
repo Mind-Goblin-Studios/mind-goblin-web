@@ -132,11 +132,12 @@ export default function FuturisticHero() {
       let startTime2: number | null = null;
       
       // Orbit animation for satellite 1
+      const startOffset1 = 0.25; // Start behind the sphere (at ~90° angle)
       const animateSatellite1 = (timestamp: number) => {
         if (!startTime1) startTime1 = timestamp;
         const elapsed = timestamp - startTime1;
         const duration = 18000; // 18 seconds per orbit
-        const progress = (elapsed % duration) / duration;
+        const progress = ((elapsed % duration) / duration + startOffset1) % 1;
         
         // Ellipse parameters for orbit 1
         const rx = 260 * scale;
@@ -176,11 +177,12 @@ export default function FuturisticHero() {
       };
       
       // Orbit animation for satellite 2 (opposite direction)
+      const startOffset2 = 0.25; // Start behind the sphere
       const animateSatellite2 = (timestamp: number) => {
         if (!startTime2) startTime2 = timestamp;
         const elapsed = timestamp - startTime2;
         const duration = 24000; // 24 seconds per orbit
-        const progress = (elapsed % duration) / duration;
+        const progress = ((elapsed % duration) / duration + startOffset2) % 1;
         
         // Ellipse parameters for orbit 2
         const rx = 280 * scale;
