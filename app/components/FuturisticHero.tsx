@@ -629,7 +629,11 @@ export default function FuturisticHero() {
             ref={textSvgRef}
             viewBox="0 0 200 80" 
             className="mind-goblin-text w-40 sm:w-52 md:w-72 lg:w-80 absolute"
-            style={{ opacity: 0, visibility: 'hidden' }}
+            style={{ 
+              opacity: 0, 
+              visibility: 'hidden',
+              filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.08))'
+            }}
           >
             <defs>
               <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
