@@ -593,13 +593,13 @@ export default function FuturisticHero() {
           <div 
             className="satellite-1 absolute rounded-full"
             style={{ 
-              width: '8px',
-              height: '8px',
+              width: '15px',
+              height: '15px',
               left: '50%', 
               top: '50%', 
               opacity: 0,
               background: 'radial-gradient(circle, #ff6b6b 0%, #ff4b4b 50%, #cc3333 100%)',
-              boxShadow: '0 0 12px rgba(255,75,75,0.9), 0 0 24px rgba(255,75,75,0.5), 0 0 36px rgba(255,75,75,0.3)',
+              boxShadow: '0 0 14px rgba(255,75,75,0.9), 0 0 28px rgba(255,75,75,0.5), 0 0 42px rgba(255,75,75,0.3)',
               transform: 'translate(-50%, -50%)',
             }}
           />
@@ -607,13 +607,13 @@ export default function FuturisticHero() {
           <div 
             className="satellite-2 absolute rounded-full"
             style={{ 
-              width: '6px',
-              height: '6px',
+              width: '10px',
+              height: '10px',
               left: '50%', 
               top: '50%', 
               opacity: 0,
               background: 'radial-gradient(circle, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%)',
-              boxShadow: '0 0 10px rgba(168,85,247,0.9), 0 0 20px rgba(168,85,247,0.5), 0 0 30px rgba(168,85,247,0.3)',
+              boxShadow: '0 0 12px rgba(168,85,247,0.9), 0 0 24px rgba(168,85,247,0.5), 0 0 36px rgba(168,85,247,0.3)',
               transform: 'translate(-50%, -50%)',
             }}
           />
