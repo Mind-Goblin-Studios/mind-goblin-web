@@ -118,7 +118,7 @@ export default function FuturisticHero() {
         opacity: [0, 1],
         duration: 1500,
         ease: 'inOutSine',
-        delay: 6000,
+        delay: 6500,
       });
     }
 
