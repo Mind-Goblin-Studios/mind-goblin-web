@@ -119,14 +119,6 @@ export default function FuturisticHero() {
     const satellite2 = document.querySelector('.satellite-2') as HTMLElement;
     
     if (satellite1 && satellite2) {
-      // Show orbit paths with fade in
-      animate('.orbit-path-1, .orbit-path-2', {
-        opacity: [0, 1],
-        duration: 2000,
-        ease: 'outQuad',
-        delay: 3000,
-      });
-
       // Calculate orbital positions manually for tilted ellipses
       // Orbit 1: rx=260, ry=100, rotation=-25 degrees
       // Orbit 2: rx=280, ry=90, rotation=30 degrees
@@ -569,40 +561,31 @@ export default function FuturisticHero() {
         {/* Orbital paths and satellites */}
         <div className="orbit-container absolute inset-0 pointer-events-none" style={{ overflow: 'visible' }}>
           <svg className="w-full h-full" viewBox="0 0 440 440" style={{ overflow: 'visible' }}>
-            <defs>
-              {/* Define the elliptical orbit paths */}
-              <path 
-                id="orbitPath1"
-                d="M 220,120 A 260,100 0 1,1 219.99,120 A 260,100 0 1,1 220,120"
-                fill="none"
-              />
-              <path 
-                id="orbitPath2"
-                d="M 220,130 A 280,90 0 1,0 220.01,130 A 280,90 0 1,0 220,130"
-                fill="none"
-              />
-            </defs>
-            {/* Visible orbital path 1 - tilted */}
-            <use 
-              href="#orbitPath1"
+            {/* Visible orbital path 1 - tilted ellipse (red satellite track) */}
+            <ellipse 
               className="orbit-path-1"
-              stroke="rgba(255,75,75,0.12)" 
+              cx="220" 
+              cy="220" 
+              rx="260" 
+              ry="100"
+              stroke="rgba(255,75,75,0.15)" 
               strokeWidth="1"
               strokeDasharray="6 6"
               fill="none"
               transform="rotate(-25 220 220)"
-              style={{ opacity: 0 }}
             />
-            {/* Visible orbital path 2 - opposite tilt */}
-            <use 
-              href="#orbitPath2"
+            {/* Visible orbital path 2 - opposite tilt (purple satellite track) */}
+            <ellipse 
               className="orbit-path-2"
-              stroke="rgba(168,85,247,0.12)" 
+              cx="220" 
+              cy="220" 
+              rx="280" 
+              ry="90"
+              stroke="rgba(168,85,247,0.15)" 
               strokeWidth="1"
               strokeDasharray="6 6"
               fill="none"
               transform="rotate(30 220 220)"
-              style={{ opacity: 0 }}
             />
           </svg>
           
