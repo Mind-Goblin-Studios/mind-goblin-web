@@ -183,14 +183,14 @@ export default function FuturisticHero() {
       // Animate games mode side text in
       animate('.games-left-text', {
         opacity: [0, 1],
-        translateX: [-30, 0],
+        translateY: [-20, 0],
         duration: 800,
         ease: 'outExpo',
         delay: 400,
       });
       animate('.games-right-text', {
         opacity: [0, 1],
-        translateX: [30, 0],
+        translateY: [20, 0],
         duration: 800,
         ease: 'outExpo',
         delay: 500,
@@ -378,8 +378,8 @@ export default function FuturisticHero() {
 
       {/* Left side text - hidden in games mode */}
       {!isGamesMode && (
-        <div className="absolute left-1/2 -translate-x-1/2 md:left-16 lg:left-24 md:translate-x-0 top-20 md:top-1/2 md:-translate-y-1/2 z-20 max-w-md text-center md:text-left">
-          <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-2 md:mb-6">
+        <div className="absolute left-1/2 -translate-x-1/2 md:left-16 lg:left-24 md:translate-x-0 top-16 md:top-1/2 md:-translate-y-1/2 z-20 max-w-md text-center md:text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-2 md:mb-6">
             <span className="hero-text-line block opacity-0">Game</span>
             <span className="hero-text-line block opacity-0">development</span>
             <span className="hero-text-line block opacity-0">studio.</span>
@@ -393,8 +393,8 @@ export default function FuturisticHero() {
 
       {/* Right side text - hidden in games mode, below sphere on mobile */}
       {!isGamesMode && (
-        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-16 lg:right-24 bottom-36 md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-20 max-w-sm text-center md:text-right">
-          <p className="right-text text-base sm:text-lg md:text-2xl lg:text-3xl font-light text-white leading-relaxed opacity-0">
+        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-16 lg:right-24 bottom-28 md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-20 max-w-sm text-center md:text-right">
+          <p className="right-text text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-white leading-relaxed opacity-0">
             Creatives crafting new<br />
             and exciting titles
           </p>
@@ -525,15 +525,15 @@ export default function FuturisticHero() {
       )}
 
       {/* Social Media Links - visible in both modes */}
-      <div className="social-links absolute bottom-4 md:bottom-12 right-4 md:right-16 lg:right-24 flex gap-2 md:gap-4 z-20">
+      <div className="social-links absolute bottom-4 md:bottom-12 right-2 md:right-16 lg:right-24 flex gap-1 md:gap-4 z-20">
           <a 
             href="https://www.instagram.com/mindgoblin.gg/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
             aria-label="Instagram"
           >
-            <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
             </svg>
           </a>
@@ -541,10 +541,10 @@ export default function FuturisticHero() {
             href="https://x.com/mindgoblin_gg" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
             aria-label="Twitter/X"
           >
-            <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
           </a>
@@ -552,10 +552,10 @@ export default function FuturisticHero() {
             href="https://www.tiktok.com/@mindgoblin.gg" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
             aria-label="TikTok"
           >
-            <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
               <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
             </svg>
           </a>
@@ -563,55 +563,72 @@ export default function FuturisticHero() {
             href="https://www.youtube.com/@mindgoblin_gg" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            className="w-7 h-7 md:w-10 md:h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
             aria-label="YouTube"
           >
-            <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
               <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
             </svg>
           </a>
         </div>
 
-      {/* Games mode - Left side text */}
+      {/* Games mode - Left side text (top on mobile) */}
       {isGamesMode && (
-        <div className="games-left-text absolute left-8 md:left-16 lg:left-24 top-[42%] -translate-y-1/2 z-20 max-w-md opacity-0">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
-            The Mind Goblin team<br />
-            is hard at work.
-          </h1>
-          <p className="text-gray-400 text-base md:text-lg">
-            Our team is in the process of building<br />
-            some unique multiplayer games as well<br />
-            as roguelike games.
-          </p>
-        </div>
+        <>
+          {/* Mobile version - centered at top */}
+          <div className="games-left-text absolute inset-x-0 top-16 z-20 flex justify-center md:hidden opacity-0 px-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight text-center">
+              The Mind Goblin team<br />
+              is hard at work.
+            </h1>
+          </div>
+          {/* Desktop version - left aligned */}
+          <div className="games-left-text absolute left-16 lg:left-24 top-[42%] -translate-y-1/2 z-20 max-w-md text-left opacity-0 hidden md:block">
+            <h1 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+              The Mind Goblin team<br />
+              is hard at work.
+            </h1>
+            <p className="text-gray-400 text-base lg:text-lg">
+              Our team is in the process of building<br />
+              some unique multiplayer games as well<br />
+              as roguelike games.
+            </p>
+          </div>
+        </>
       )}
 
-      {/* Games mode - Right side text */}
+      {/* Games mode - Right side text (bottom on mobile) */}
       {isGamesMode && (
-        <div className="games-right-text absolute right-8 md:right-16 lg:right-24 top-[42%] -translate-y-1/2 z-20 max-w-sm text-right opacity-0">
-          <p className="text-xl md:text-2xl lg:text-3xl font-light text-white leading-relaxed">
-            ETA on our first game<br />
-            is likely to be released<br />
-            in 2026
-          </p>
-          <p className="text-lg md:text-xl text-gray-500 mt-4 font-light">
-            最初のゲームのリリースは<br />
-            2026年を予定しています
-          </p>
-        </div>
+        <>
+          {/* Mobile version - centered at bottom */}
+          <div className="games-right-text absolute inset-x-0 bottom-24 z-20 flex justify-center md:hidden opacity-0 px-4">
+            <p className="text-base sm:text-lg font-light text-white leading-relaxed text-center max-w-xs">
+              ETA on our first game is likely to be released in 2026
+            </p>
+          </div>
+          {/* Desktop version - right aligned */}
+          <div className="games-right-text absolute right-16 lg:right-24 top-[42%] -translate-y-1/2 z-20 max-w-sm text-right opacity-0 hidden md:block">
+            <p className="text-2xl lg:text-3xl font-light text-white leading-relaxed">
+              ETA on our first game<br />is likely to be released<br />in 2026
+            </p>
+            <p className="text-lg lg:text-xl text-gray-500 mt-4 font-light">
+              最初のゲームのリリースは<br />
+              2026年を予定しています
+            </p>
+          </div>
+        </>
       )}
 
       {/* Back button - shown in games mode */}
       {isGamesMode && (
         <button 
           onClick={handleBackToHome}
-          className="back-button absolute bottom-12 left-1/2 -translate-x-1/2 px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-2 group z-20"
+          className="back-button absolute bottom-4 md:bottom-12 left-1/2 -translate-x-1/2 px-4 py-2 md:px-6 md:py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-1.5 md:gap-2 group z-20"
         >
-          <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
           </svg>
-          <span className="text-sm font-medium">Back</span>
+          <span className="text-xs md:text-sm font-medium">Back</span>
         </button>
       )}
 
