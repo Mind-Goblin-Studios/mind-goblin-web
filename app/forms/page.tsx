@@ -3,17 +3,17 @@
 
 export default function FormsPage() {
   return (
-    <div>
+    <div className="hidden">
       <h1>Form Detection Page</h1>
       <p>This page exists for Netlify form detection.</p>
       
       {/* The actual form for Netlify to detect */}
-      <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" data-netlify-recaptcha="true">
+      <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="bot-field" />
         <input type="text" name="name" />
         <input type="email" name="email" />
         <textarea name="message"></textarea>
-        <input type="text" name="bot-field" />
-        <div data-netlify-recaptcha="true"></div>
       </form>
     </div>
   );

@@ -22,7 +22,7 @@
 
 @layer base {
   body {
-    @apply bg-black text-white;
+    @apply bg-[#1a1a1a] text-white;
   }
 }
 
@@ -60,4 +60,151 @@
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Hide elements initially to prevent flash on page load */
+.mind-goblin-text,
+.games-text {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Sphere Animation Styles */
+.sphere-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+}
+
+.sphere-animation {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 580px;
+  height: 580px;
+  margin: -290px 0 0 -290px;
+}
+
+.sphere {
+  overflow: visible;
+}
+
+.sphere path {
+  fill: url(#sphereGradient), url(#sphereGradientHero);
+  stroke-width: 1px;
+  stroke: rgba(80, 80, 80, 0.35);
+  backface-visibility: hidden;
+}
+
+/* Hero sphere specific styling */
+.sphere path {
+  fill: url(#sphereGradientHero);
+}
+
+@media (min-width: 500px) {
+  .sphere path {
+    stroke-width: 0.4px;
+  }
+}
+
+/* Scroll Animation Styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* Radial gradient background */
+.bg-gradient-radial {
+  background: radial-gradient(ellipse at center, var(--tw-gradient-stops));
+}
+
+/* Floating particles */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(139, 92, 246, 0.6);
+  border-radius: 50%;
+  animation: float 20s infinite ease-in-out;
+}
+
+.particle-1 {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 25s;
+}
+
+.particle-2 {
+  top: 60%;
+  left: 80%;
+  animation-delay: -5s;
+  animation-duration: 20s;
+  background: rgba(236, 72, 153, 0.6);
+}
+
+.particle-3 {
+  top: 80%;
+  left: 30%;
+  animation-delay: -10s;
+  animation-duration: 22s;
+}
+
+.particle-4 {
+  top: 30%;
+  left: 70%;
+  animation-delay: -15s;
+  animation-duration: 18s;
+  background: rgba(239, 68, 68, 0.6);
+}
+
+.particle-5 {
+  top: 50%;
+  left: 50%;
+  animation-delay: -7s;
+  animation-duration: 24s;
+  background: rgba(139, 92, 246, 0.4);
+  width: 6px;
+  height: 6px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(100px, -50px) scale(1.2);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-50px, 100px) scale(0.8);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(-100px, -100px) scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #8b5cf6, #ec4899);
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a78bfa, #f472b6);
 }
