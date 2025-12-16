@@ -580,7 +580,7 @@ export default function FuturisticHero() {
               ry="100"
               stroke="rgba(255,75,75,0.6)" 
               strokeWidth="1"
-              strokeDasharray="6 6"
+            //   strokeDasharray="6 6"
               fill="none"
               transform="rotate(-25 220 220)"
               style={{ opacity: 0 }}
@@ -594,7 +594,7 @@ export default function FuturisticHero() {
               ry="90"
               stroke="rgba(168,85,247,0.6)" 
               strokeWidth="1"
-              strokeDasharray="6 6"
+            //   strokeDasharray="6 6"
               fill="none"
               transform="rotate(30 220 220)"
               style={{ opacity: 0 }}
