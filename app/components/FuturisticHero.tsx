@@ -112,6 +112,14 @@ export default function FuturisticHero() {
         ease: 'inOutSine',
         delay: 5000,
       });
+
+      // Animate orbital paths in after text fill completes (5000ms delay + 1500ms duration = 6500ms)
+      animate('.orbit-path-1, .orbit-path-2', {
+        opacity: [0, 1],
+        duration: 1500,
+        ease: 'inOutSine',
+        delay: 6000,
+      });
     }
 
     // Satellite orbit animations
@@ -220,16 +228,16 @@ export default function FuturisticHero() {
         requestAnimationFrame(animateSatellite2);
       };
       
-      // Start satellite animations with delay
+      // Start satellite animations after orbital paths animate in (6500ms delay)
       setTimeout(() => {
         satellite1.style.opacity = '1';
         requestAnimationFrame(animateSatellite1);
-      }, 3500);
+      }, 6500);
       
       setTimeout(() => {
         satellite2.style.opacity = '1';
         requestAnimationFrame(animateSatellite2);
-      }, 4200);
+      }, 7200);
     }
 
     // Intro animation for side text
@@ -570,11 +578,12 @@ export default function FuturisticHero() {
               cy="220" 
               rx="260" 
               ry="100"
-              stroke="rgba(255,75,75,1)" 
+              stroke="rgba(255,75,75,0.6)" 
               strokeWidth="1"
               strokeDasharray="6 6"
               fill="none"
               transform="rotate(-25 220 220)"
+              style={{ opacity: 0 }}
             />
             {/* Visible orbital path 2 - opposite tilt (purple satellite track) */}
             <ellipse 
@@ -583,11 +592,12 @@ export default function FuturisticHero() {
               cy="220" 
               rx="280" 
               ry="90"
-              stroke="rgba(168,85,247,1)" 
+              stroke="rgba(168,85,247,0.6)" 
               strokeWidth="1"
               strokeDasharray="6 6"
               fill="none"
               transform="rotate(30 220 220)"
+              style={{ opacity: 0 }}
             />
           </svg>
           
