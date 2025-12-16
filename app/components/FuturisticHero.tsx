@@ -198,19 +198,7 @@ export default function FuturisticHero() {
         duration: 500,
         ease: 'inOutQuad',
       });
-      // Hide games mode side text
-      animate('.games-left-text', {
-        opacity: [1, 0],
-        translateX: [0, -30],
-        duration: 500,
-        ease: 'inOutQuad',
-      });
-      animate('.games-right-text', {
-        opacity: [1, 0],
-        translateX: [0, 30],
-        duration: 500,
-        ease: 'inOutQuad',
-      });
+      // Games mode side text fade out is handled in handleBackToHome
     }
   }, [isGamesMode]);
 
@@ -235,10 +223,11 @@ export default function FuturisticHero() {
     if (isTransitioning) return;
     setIsTransitioning(true);
 
-    // Fade out games mode UI
-    animate('.back-button', {
+    // Fade out games mode UI (matching the landing page fade out style)
+    animate('.games-left-text, .games-right-text, .back-button', {
       opacity: [1, 0],
-      duration: 400,
+      translateY: [0, 20],
+      duration: 600,
       ease: 'inOutQuad',
       onComplete: () => {
         setIsGamesMode(false);
@@ -363,7 +352,7 @@ export default function FuturisticHero() {
       )}
 
       {/* Center sphere - always visible */}
-      <div className="relative w-[485px] h-[485px] md:w-[620px] md:h-[620px] lg:w-[690px] lg:h-[690px]">
+      <div className="relative w-[534px] h-[534px] md:w-[682px] md:h-[682px] lg:w-[759px] lg:h-[759px]">
         
         {/* The Sphere Animation */}
         <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center">
