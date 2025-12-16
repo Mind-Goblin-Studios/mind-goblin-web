@@ -114,6 +114,130 @@ export default function FuturisticHero() {
       });
     }
 
+    // Satellite orbit animations
+    const satellite1 = document.querySelector('.satellite-1') as HTMLElement;
+    const satellite2 = document.querySelector('.satellite-2') as HTMLElement;
+    
+    if (satellite1 && satellite2) {
+      // Show orbit paths with fade in
+      animate('.orbit-path-1, .orbit-path-2', {
+        opacity: [0, 1],
+        duration: 2000,
+        ease: 'outQuad',
+        delay: 3000,
+      });
+
+      // Calculate orbital positions manually for tilted ellipses
+      // Orbit 1: rx=260, ry=100, rotation=-25 degrees
+      // Orbit 2: rx=280, ry=90, rotation=30 degrees
+      
+      const centerX = 220;
+      const centerY = 220;
+      const containerSize = sphereRef.current?.clientWidth || 550;
+      const scale = containerSize / 440;
+      
+      let startTime1: number | null = null;
+      let startTime2: number | null = null;
+      
+      // Orbit animation for satellite 1
+      const animateSatellite1 = (timestamp: number) => {
+        if (!startTime1) startTime1 = timestamp;
+        const elapsed = timestamp - startTime1;
+        const duration = 18000; // 18 seconds per orbit
+        const progress = (elapsed % duration) / duration;
+        
+        // Ellipse parameters for orbit 1
+        const rx = 260 * scale;
+        const ry = 100 * scale;
+        const rotationDeg = -25;
+        const rotationRad = (rotationDeg * Math.PI) / 180;
+        
+        // Calculate position on unrotated ellipse
+        const angle = progress * 2 * Math.PI;
+        const x = rx * Math.cos(angle);
+        const y = ry * Math.sin(angle);
+        
+        // Apply rotation
+        const rotatedX = x * Math.cos(rotationRad) - y * Math.sin(rotationRad);
+        const rotatedY = x * Math.sin(rotationRad) + y * Math.cos(rotationRad);
+        
+        // Final position relative to container center
+        const finalX = (containerSize / 2) + rotatedX;
+        const finalY = (containerSize / 2) + rotatedY;
+        
+        satellite1.style.left = `${finalX}px`;
+        satellite1.style.top = `${finalY}px`;
+        
+        // Simulate depth - when y component indicates "behind" sphere
+        // Behind when angle is between π/4 and 3π/4 (roughly top-back portion)
+        if (angle > Math.PI * 0.2 && angle < Math.PI * 0.8) {
+          satellite1.style.opacity = '0.25';
+          satellite1.style.zIndex = '5';
+          satellite1.style.filter = 'blur(1px)';
+        } else {
+          satellite1.style.opacity = '1';
+          satellite1.style.zIndex = '35';
+          satellite1.style.filter = 'none';
+        }
+        
+        requestAnimationFrame(animateSatellite1);
+      };
+      
+      // Orbit animation for satellite 2 (opposite direction)
+      const animateSatellite2 = (timestamp: number) => {
+        if (!startTime2) startTime2 = timestamp;
+        const elapsed = timestamp - startTime2;
+        const duration = 24000; // 24 seconds per orbit
+        const progress = (elapsed % duration) / duration;
+        
+        // Ellipse parameters for orbit 2
+        const rx = 280 * scale;
+        const ry = 90 * scale;
+        const rotationDeg = 30;
+        const rotationRad = (rotationDeg * Math.PI) / 180;
+        
+        // Calculate position on unrotated ellipse (counter-clockwise)
+        const angle = (1 - progress) * 2 * Math.PI;
+        const x = rx * Math.cos(angle);
+        const y = ry * Math.sin(angle);
+        
+        // Apply rotation
+        const rotatedX = x * Math.cos(rotationRad) - y * Math.sin(rotationRad);
+        const rotatedY = x * Math.sin(rotationRad) + y * Math.cos(rotationRad);
+        
+        // Final position relative to container center
+        const finalX = (containerSize / 2) + rotatedX;
+        const finalY = (containerSize / 2) + rotatedY;
+        
+        satellite2.style.left = `${finalX}px`;
+        satellite2.style.top = `${finalY}px`;
+        
+        // Simulate depth - opposite phase from satellite 1
+        if (angle > Math.PI * 1.2 && angle < Math.PI * 1.8) {
+          satellite2.style.opacity = '0.25';
+          satellite2.style.zIndex = '5';
+          satellite2.style.filter = 'blur(1px)';
+        } else {
+          satellite2.style.opacity = '1';
+          satellite2.style.zIndex = '35';
+          satellite2.style.filter = 'none';
+        }
+        
+        requestAnimationFrame(animateSatellite2);
+      };
+      
+      // Start satellite animations with delay
+      setTimeout(() => {
+        satellite1.style.opacity = '1';
+        requestAnimationFrame(animateSatellite1);
+      }, 3500);
+      
+      setTimeout(() => {
+        satellite2.style.opacity = '1';
+        requestAnimationFrame(animateSatellite2);
+      }, 4200);
+    }
+
     // Intro animation for side text
     const textTimeline = createTimeline({ autoplay: true });
     
@@ -406,10 +530,10 @@ export default function FuturisticHero() {
       )}
 
       {/* Center sphere - always visible */}
-      <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px]">
+      <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px] z-10">
         
         {/* The Sphere Animation */}
-        <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center">
+        <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center z-10">
           <svg className="sphere w-full h-full" viewBox="0 0 440 440" stroke="rgba(80,80,80,.35)">
             <defs>
               <linearGradient id="sphereGradientHero" x1="5%" x2="5%" y1="0%" y2="15%">
@@ -442,8 +566,78 @@ export default function FuturisticHero() {
           </svg>
         </div>
 
+        {/* Orbital paths and satellites */}
+        <div className="orbit-container absolute inset-0 pointer-events-none" style={{ overflow: 'visible' }}>
+          <svg className="w-full h-full" viewBox="0 0 440 440" style={{ overflow: 'visible' }}>
+            <defs>
+              {/* Define the elliptical orbit paths */}
+              <path 
+                id="orbitPath1"
+                d="M 220,120 A 260,100 0 1,1 219.99,120 A 260,100 0 1,1 220,120"
+                fill="none"
+              />
+              <path 
+                id="orbitPath2"
+                d="M 220,130 A 280,90 0 1,0 220.01,130 A 280,90 0 1,0 220,130"
+                fill="none"
+              />
+            </defs>
+            {/* Visible orbital path 1 - tilted */}
+            <use 
+              href="#orbitPath1"
+              className="orbit-path-1"
+              stroke="rgba(255,75,75,0.12)" 
+              strokeWidth="1"
+              strokeDasharray="6 6"
+              fill="none"
+              transform="rotate(-25 220 220)"
+              style={{ opacity: 0 }}
+            />
+            {/* Visible orbital path 2 - opposite tilt */}
+            <use 
+              href="#orbitPath2"
+              className="orbit-path-2"
+              stroke="rgba(168,85,247,0.12)" 
+              strokeWidth="1"
+              strokeDasharray="6 6"
+              fill="none"
+              transform="rotate(30 220 220)"
+              style={{ opacity: 0 }}
+            />
+          </svg>
+          
+          {/* Satellite 1 - red */}
+          <div 
+            className="satellite-1 absolute rounded-full"
+            style={{ 
+              width: '8px',
+              height: '8px',
+              left: '50%', 
+              top: '50%', 
+              opacity: 0,
+              background: 'radial-gradient(circle, #ff6b6b 0%, #ff4b4b 50%, #cc3333 100%)',
+              boxShadow: '0 0 12px rgba(255,75,75,0.9), 0 0 24px rgba(255,75,75,0.5), 0 0 36px rgba(255,75,75,0.3)',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+          {/* Satellite 2 - purple */}
+          <div 
+            className="satellite-2 absolute rounded-full"
+            style={{ 
+              width: '6px',
+              height: '6px',
+              left: '50%', 
+              top: '50%', 
+              opacity: 0,
+              background: 'radial-gradient(circle, #a78bfa 0%, #8b5cf6 50%, #7c3aed 100%)',
+              boxShadow: '0 0 10px rgba(168,85,247,0.9), 0 0 20px rgba(168,85,247,0.5), 0 0 30px rgba(168,85,247,0.3)',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        </div>
+
         {/* Center title container - both texts, toggle visibility */}
-        <div className="center-title-container absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="center-title-container absolute inset-0 flex items-center justify-center pointer-events-none z-40">
           {/* Subtle glow effect behind text */}
           <div className="absolute w-48 h-32 bg-white/5 rounded-full blur-3xl" />
           
