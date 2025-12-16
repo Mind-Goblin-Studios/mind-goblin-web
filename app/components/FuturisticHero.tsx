@@ -129,6 +129,12 @@ export default function FuturisticHero() {
         duration: 1000,
         ease: 'outExpo',
       }, 800)
+      .add('.steam-button', {
+        opacity: [0, 1],
+        translateY: [-20, 0],
+        duration: 800,
+        ease: 'outExpo',
+      }, 600)
       .add('.social-links a', {
         opacity: [0, 1],
         translateY: [20, 0],
@@ -321,6 +327,19 @@ export default function FuturisticHero() {
           backgroundSize: '40px 40px',
         }} />
       </div>
+
+      {/* Steam button - top left */}
+      <a 
+        href="https://store.steampowered.com/developer/mindgoblin/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="steam-button absolute top-8 left-8 md:left-16 lg:left-24 px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-[#1b2838] hover:text-white hover:bg-[#1b2838] transition-all flex items-center gap-2 group z-20 opacity-0"
+      >
+        <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658a3.387 3.387 0 0 1 1.912-.59c.064 0 .125.004.188.006l2.861-4.142V8.91a4.528 4.528 0 0 1 4.524-4.524c2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.606 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303a3.019 3.019 0 0 0-3.015-3.015 3.019 3.019 0 0 0-3.015 3.015 3.019 3.019 0 0 0 3.015 3.015 3.019 3.019 0 0 0 3.015-3.015zm-5.273-.005c0-1.248 1.013-2.262 2.261-2.262a2.263 2.263 0 0 1 0 4.525c-1.248 0-2.261-1.014-2.261-2.263z"/>
+        </svg>
+        <span className="text-sm font-medium">Follow us on Steam</span>
+      </a>
 
       {/* Left side text - hidden in games mode */}
       {!isGamesMode && (
