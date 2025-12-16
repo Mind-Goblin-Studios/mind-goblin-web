@@ -2,21 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { animate, stagger, createTimeline, createDrawable } from 'animejs';
-import dynamic from 'next/dynamic';
-
-// Dynamic import for Three.js cube to avoid SSR issues
-const ThreeCube = dynamic(() => import('./ThreeCube'), { ssr: false });
 
 export default function FuturisticHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
   const textSvgRef = useRef<SVGSVGElement>(null);
-  const [showCube, setShowCube] = useState(false);
+  const [isGamesMode, setIsGamesMode] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  
+  // Ref to track color mode for breathing animation
+  const colorModeRef = useRef<'red' | 'purple'>('red');
 
   useEffect(() => {
     if (!containerRef.current || !sphereRef.current) return;
@@ -24,22 +23,13 @@ export default function FuturisticHero() {
     const spherePathEls = sphereRef.current.querySelectorAll('.sphere path');
     const pathLength = spherePathEls.length;
 
-    // Create individual path animations for breath effect
-    const pathAnimations: ReturnType<typeof animate>[] = [];
-    for (let i = 0; i < pathLength; i++) {
-      pathAnimations.push(
-        animate(spherePathEls[i], {
-          stroke: ['rgba(255,75,75,1)', 'rgba(80,80,80,.35)'],
-          translateX: [2, -4],
-          translateY: [2, -4],
-          ease: 'outQuad',
-          duration: 500,
-          autoplay: false,
-        })
-      );
-    }
+    // Color definitions
+    const colors = {
+      red: { bright: [255, 75, 75], dim: [80, 80, 80] },
+      purple: { bright: [168, 85, 247], dim: [80, 80, 80] }
+    };
 
-    // Breath animation - creates the pulsing wave effect
+    // Breath animation - creates the pulsing wave effect with direct color manipulation
     let breathAnimationId: number;
     let startTime: number | null = null;
     
@@ -47,10 +37,24 @@ export default function FuturisticHero() {
       if (!startTime) startTime = timestamp;
       const currentTime = timestamp - startTime;
       
-      pathAnimations.forEach((animation, i) => {
-        // Slowed down further for a more relaxed breathing effect
+      const currentColors = colors[colorModeRef.current];
+      
+      spherePathEls.forEach((path, i) => {
+        const pathEl = path as SVGPathElement;
+        // Calculate wave position for this path
         const percent = (1 - Math.sin(i * 0.35 + 0.0008 * currentTime)) / 2;
-        animation.seek(animation.duration * percent);
+        
+        // Interpolate between bright and dim colors
+        const r = Math.round(currentColors.bright[0] + (currentColors.dim[0] - currentColors.bright[0]) * percent);
+        const g = Math.round(currentColors.bright[1] + (currentColors.dim[1] - currentColors.bright[1]) * percent);
+        const b = Math.round(currentColors.bright[2] + (currentColors.dim[2] - currentColors.bright[2]) * percent);
+        const alpha = 1 - (percent * 0.65); // Fade from 1 to 0.35
+        
+        pathEl.style.stroke = `rgba(${r},${g},${b},${alpha})`;
+        
+        // Apply transform based on wave
+        const translateVal = 2 + (percent * -6); // Goes from 2 to -4
+        pathEl.style.transform = `translate(${translateVal}px, ${translateVal}px)`;
       });
       
       breathAnimationId = requestAnimationFrame(breathe);
@@ -139,66 +143,115 @@ export default function FuturisticHero() {
     };
   }, []);
 
-  // Games view animations
+  // Games mode - change sphere color and show games text
   useEffect(() => {
-    if (!showCube) return;
-
-    // Animate the "Games" text
-    animate('.games-title-text', {
-      opacity: [0, 1],
-      scale: [0.5, 1],
-      duration: 1000,
-      ease: 'outExpo',
-      delay: 500,
-    });
-  }, [showCube]);
+    if (isGamesMode) {
+      // Switch to purple color mode for breathing animation
+      colorModeRef.current = 'purple';
+      
+      // Animate the "Games" text in
+      animate('.games-text', {
+        opacity: [0, 1],
+        scale: [0.8, 1],
+        duration: 800,
+        ease: 'outExpo',
+        delay: 300,
+      });
+      // Hide Mind Goblin text
+      animate('.mind-goblin-text', {
+        opacity: [1, 0],
+        scale: [1, 0.8],
+        duration: 500,
+        ease: 'inOutQuad',
+      });
+      // Animate games mode side text in
+      animate('.games-left-text', {
+        opacity: [0, 1],
+        translateX: [-30, 0],
+        duration: 800,
+        ease: 'outExpo',
+        delay: 400,
+      });
+      animate('.games-right-text', {
+        opacity: [0, 1],
+        translateX: [30, 0],
+        duration: 800,
+        ease: 'outExpo',
+        delay: 500,
+      });
+    } else {
+      // Switch back to red color mode for breathing animation
+      colorModeRef.current = 'red';
+      
+      // Show Mind Goblin text
+      animate('.mind-goblin-text', {
+        opacity: [0, 1],
+        scale: [0.8, 1],
+        duration: 800,
+        ease: 'outExpo',
+        delay: 300,
+      });
+      // Hide Games text
+      animate('.games-text', {
+        opacity: [1, 0],
+        scale: [1, 0.8],
+        duration: 500,
+        ease: 'inOutQuad',
+      });
+      // Hide games mode side text
+      animate('.games-left-text', {
+        opacity: [1, 0],
+        translateX: [0, -30],
+        duration: 500,
+        ease: 'inOutQuad',
+      });
+      animate('.games-right-text', {
+        opacity: [1, 0],
+        translateX: [0, 30],
+        duration: 500,
+        ease: 'inOutQuad',
+      });
+    }
+  }, [isGamesMode]);
 
   const handleShowGames = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
 
-    // Fade out current content
-    const timeline = createTimeline({
-      autoplay: true,
+    // Fade out side content but keep sphere and social links
+    animate('.hero-text-line, .hero-subtitle, .right-text, .bottom-buttons', {
+      opacity: [1, 0],
+      translateY: [0, 20],
+      duration: 600,
+      ease: 'inOutQuad',
+      onComplete: () => {
+        setIsGamesMode(true);
+        setIsTransitioning(false);
+      },
     });
-
-    timeline
-      .add('.sphere, .center-title-container, .hero-text-line, .hero-subtitle, .right-text, .bottom-buttons, .social-links', {
-        opacity: [1, 0],
-        scale: [1, 0.9],
-        duration: 800,
-        ease: 'inOutQuad',
-      }, 0)
-      .add({
-        duration: 100,
-        onComplete: () => {
-          setShowCube(true);
-          setIsTransitioning(false);
-        }
-      }, 800);
   };
 
   const handleBackToHome = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
 
-    animate('.cube-container, .games-title-text, .back-button', {
+    // Fade out games mode UI
+    animate('.back-button', {
       opacity: [1, 0],
-      scale: [1, 0.9],
-      duration: 600,
+      duration: 400,
       ease: 'inOutQuad',
       onComplete: () => {
-        setShowCube(false);
+        setIsGamesMode(false);
         setIsTransitioning(false);
-        // Re-trigger intro animations
+        // Re-trigger side content animations
         setTimeout(() => {
-          animate('.sphere, .center-title-container, .hero-text-line, .hero-subtitle, .right-text, .bottom-buttons, .social-links', {
+          animate('.hero-text-line, .hero-subtitle, .right-text, .bottom-buttons', {
             opacity: [0, 1],
-            scale: [0.9, 1],
+            translateY: [20, 0],
             duration: 800,
             ease: 'outExpo',
           });
-        }, 100);
+        }, 300);
       },
     });
   };
@@ -280,232 +333,242 @@ export default function FuturisticHero() {
         }} />
       </div>
 
-      {!showCube ? (
-        <>
-          {/* Left side text */}
-          <div className="absolute left-8 md:left-16 lg:left-24 top-1/2 -translate-y-1/2 z-20 max-w-md">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              <span className="hero-text-line block opacity-0">Game</span>
-              <span className="hero-text-line block opacity-0">development</span>
-              <span className="hero-text-line block opacity-0">studio.</span>
-            </h1>
-            <p className="hero-subtitle text-gray-400 text-lg md:text-xl opacity-0">
-              A passionate indie studio creating<br />
-              immersive gaming experiences.
-            </p>
-          </div>
+      {/* Left side text - hidden in games mode */}
+      {!isGamesMode && (
+        <div className="absolute left-8 md:left-16 lg:left-24 top-1/2 -translate-y-1/2 z-20 max-w-md">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+            <span className="hero-text-line block opacity-0">Game</span>
+            <span className="hero-text-line block opacity-0">development</span>
+            <span className="hero-text-line block opacity-0">studio.</span>
+          </h1>
+          <p className="hero-subtitle text-gray-400 text-lg md:text-xl opacity-0">
+            A passionate indie studio creating<br />
+            immersive gaming experiences.
+          </p>
+        </div>
+      )}
 
-          {/* Right side text */}
-          <div className="absolute right-8 md:right-16 lg:right-24 top-1/2 -translate-y-1/2 z-20 max-w-sm text-right">
-            <p className="right-text text-xl md:text-2xl lg:text-3xl font-light text-white leading-relaxed opacity-0">
-              Creatives crafting new<br />
-              and exciting titles
-            </p>
-            <p className="right-text text-lg md:text-xl text-gray-500 mt-4 opacity-0 font-light">
-              新しくエキサイティングな<br />
-              タイトルを創り出す
-            </p>
-          </div>
+      {/* Right side text - hidden in games mode */}
+      {!isGamesMode && (
+        <div className="absolute right-8 md:right-16 lg:right-24 top-1/2 -translate-y-1/2 z-20 max-w-sm text-right">
+          <p className="right-text text-xl md:text-2xl lg:text-3xl font-light text-white leading-relaxed opacity-0">
+            Creatives crafting new<br />
+            and exciting titles
+          </p>
+          <p className="right-text text-lg md:text-xl text-gray-500 mt-4 opacity-0 font-light">
+            新しくエキサイティングな<br />
+            タイトルを創り出す
+          </p>
+        </div>
+      )}
 
-          {/* Center sphere with Mind Goblin */}
-          <div className="relative w-[485px] h-[485px] md:w-[620px] md:h-[620px] lg:w-[690px] lg:h-[690px]">
-            
-            {/* The Sphere Animation */}
-            <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center">
-              <svg className="sphere w-full h-full" viewBox="0 0 440 440" stroke="rgba(80,80,80,.35)">
-                <defs>
-                  <linearGradient id="sphereGradientHero" x1="5%" x2="5%" y1="0%" y2="15%">
-                    <stop stopColor="#373734" offset="0%" />
-                    <stop stopColor="#242423" offset="50%" />
-                    <stop stopColor="#0D0D0C" offset="100%" />
-                  </linearGradient>
-                </defs>
-                <path d="M361.604 361.238c-24.407 24.408-51.119 37.27-59.662 28.727-8.542-8.543 4.319-35.255 28.726-59.663 24.408-24.407 51.12-37.269 59.663-28.726 8.542 8.543-4.319 35.255-28.727 59.662z" />
-                <path d="M360.72 360.354c-35.879 35.88-75.254 54.677-87.946 41.985-12.692-12.692 6.105-52.067 41.985-87.947 35.879-35.879 75.254-54.676 87.946-41.984 12.692 12.692-6.105 52.067-41.984 87.946z" />
-                <path d="M357.185 356.819c-44.91 44.91-94.376 68.258-110.485 52.149-16.11-16.11 7.238-65.575 52.149-110.485 44.91-44.91 94.376-68.259 110.485-52.15 16.11 16.11-7.239 65.576-52.149 110.486z" />
-                <path d="M350.998 350.632c-53.21 53.209-111.579 81.107-130.373 62.313-18.794-18.793 9.105-77.163 62.314-130.372 53.209-53.21 111.579-81.108 130.373-62.314 18.794 18.794-9.105 77.164-62.314 130.373z" />
-                <path d="M343.043 342.677c-59.8 59.799-125.292 91.26-146.283 70.268-20.99-20.99 10.47-86.483 70.269-146.282 59.799-59.8 125.292-91.26 146.283-70.269 20.99 20.99-10.47 86.484-70.27 146.283z" />
-                <path d="M334.646 334.28c-65.169 65.169-136.697 99.3-159.762 76.235-23.065-23.066 11.066-94.593 76.235-159.762s136.697-99.3 159.762-76.235c23.065 23.065-11.066 94.593-76.235 159.762z" />
-                <path d="M324.923 324.557c-69.806 69.806-146.38 106.411-171.031 81.76-24.652-24.652 11.953-101.226 81.759-171.032 69.806-69.806 146.38-106.411 171.031-81.76 24.652 24.653-11.953 101.226-81.759 171.032z" />
-                <path d="M312.99 312.625c-73.222 73.223-153.555 111.609-179.428 85.736-25.872-25.872 12.514-106.205 85.737-179.428s153.556-111.609 179.429-85.737c25.872 25.873-12.514 106.205-85.737 179.429z" />
-                <path d="M300.175 299.808c-75.909 75.909-159.11 115.778-185.837 89.052-26.726-26.727 13.143-109.929 89.051-185.837 75.908-75.908 159.11-115.778 185.837-89.051 26.726 26.726-13.143 109.928-89.051 185.836z" />
-                <path d="M284.707 284.34c-77.617 77.617-162.303 118.773-189.152 91.924-26.848-26.848 14.308-111.534 91.924-189.15C265.096 109.496 349.782 68.34 376.63 95.188c26.849 26.849-14.307 111.535-91.923 189.151z" />
-                <path d="M269.239 267.989c-78.105 78.104-163.187 119.656-190.035 92.807-26.849-26.848 14.703-111.93 92.807-190.035 78.105-78.104 163.187-119.656 190.035-92.807 26.849 26.848-14.703 111.93-92.807 190.035z" />
-                <path d="M252.887 252.52C175.27 330.138 90.584 371.294 63.736 344.446 36.887 317.596 78.043 232.91 155.66 155.293 233.276 77.677 317.962 36.521 344.81 63.37c26.85 26.848-14.307 111.534-91.923 189.15z" />
-                <path d="M236.977 236.61C161.069 312.52 77.867 352.389 51.14 325.663c-26.726-26.727 13.143-109.928 89.052-185.837 75.908-75.908 159.11-115.777 185.836-89.05 26.727 26.726-13.143 109.928-89.051 185.836z" />
-                <path d="M221.067 220.7C147.844 293.925 67.51 332.31 41.639 306.439c-25.873-25.873 12.513-106.206 85.736-179.429C200.6 53.786 280.931 15.4 306.804 41.272c25.872 25.873-12.514 106.206-85.737 179.429z" />
-                <path d="M205.157 204.79c-69.806 69.807-146.38 106.412-171.031 81.76-24.652-24.652 11.953-101.225 81.759-171.031 69.806-69.807 146.38-106.411 171.031-81.76 24.652 24.652-11.953 101.226-81.759 171.032z" />
-                <path d="M189.247 188.881c-65.169 65.169-136.696 99.3-159.762 76.235-23.065-23.065 11.066-94.593 76.235-159.762s136.697-99.3 159.762-76.235c23.065 23.065-11.066 94.593-76.235 159.762z" />
-                <path d="M173.337 172.971c-59.799 59.8-125.292 91.26-146.282 70.269-20.991-20.99 10.47-86.484 70.268-146.283 59.8-59.799 125.292-91.26 146.283-70.269 20.99 20.991-10.47 86.484-70.269 146.283z" />
-                <path d="M157.427 157.061c-53.209 53.21-111.578 81.108-130.372 62.314-18.794-18.794 9.104-77.164 62.313-130.373 53.21-53.209 111.58-81.108 130.373-62.314 18.794 18.794-9.105 77.164-62.314 130.373z" />
-                <path d="M141.517 141.151c-44.91 44.91-94.376 68.259-110.485 52.15-16.11-16.11 7.239-65.576 52.15-110.486 44.91-44.91 94.375-68.258 110.485-52.15 16.109 16.11-7.24 65.576-52.15 110.486z" />
-                <path d="M125.608 125.241c-35.88 35.88-75.255 54.677-87.947 41.985-12.692-12.692 6.105-52.067 41.985-87.947C115.525 43.4 154.9 24.603 167.592 37.295c12.692 12.692-6.105 52.067-41.984 87.946z" />
-                <path d="M109.698 109.332c-24.408 24.407-51.12 37.268-59.663 28.726-8.542-8.543 4.319-35.255 28.727-59.662 24.407-24.408 51.12-37.27 59.662-28.727 8.543 8.543-4.319 35.255-28.726 59.663z" />
-              </svg>
-            </div>
+      {/* Center sphere - always visible */}
+      <div className="relative w-[485px] h-[485px] md:w-[620px] md:h-[620px] lg:w-[690px] lg:h-[690px]">
+        
+        {/* The Sphere Animation */}
+        <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center">
+          <svg className="sphere w-full h-full" viewBox="0 0 440 440" stroke="rgba(80,80,80,.35)">
+            <defs>
+              <linearGradient id="sphereGradientHero" x1="5%" x2="5%" y1="0%" y2="15%">
+                <stop stopColor="#373734" offset="0%" />
+                <stop stopColor="#242423" offset="50%" />
+                <stop stopColor="#0D0D0C" offset="100%" />
+              </linearGradient>
+            </defs>
+            <path d="M361.604 361.238c-24.407 24.408-51.119 37.27-59.662 28.727-8.542-8.543 4.319-35.255 28.726-59.663 24.408-24.407 51.12-37.269 59.663-28.726 8.542 8.543-4.319 35.255-28.727 59.662z" />
+            <path d="M360.72 360.354c-35.879 35.88-75.254 54.677-87.946 41.985-12.692-12.692 6.105-52.067 41.985-87.947 35.879-35.879 75.254-54.676 87.946-41.984 12.692 12.692-6.105 52.067-41.984 87.946z" />
+            <path d="M357.185 356.819c-44.91 44.91-94.376 68.258-110.485 52.149-16.11-16.11 7.238-65.575 52.149-110.485 44.91-44.91 94.376-68.259 110.485-52.15 16.11 16.11-7.239 65.576-52.149 110.486z" />
+            <path d="M350.998 350.632c-53.21 53.209-111.579 81.107-130.373 62.313-18.794-18.793 9.105-77.163 62.314-130.372 53.209-53.21 111.579-81.108 130.373-62.314 18.794 18.794-9.105 77.164-62.314 130.373z" />
+            <path d="M343.043 342.677c-59.8 59.799-125.292 91.26-146.283 70.268-20.99-20.99 10.47-86.483 70.269-146.282 59.799-59.8 125.292-91.26 146.283-70.269 20.99 20.99-10.47 86.484-70.27 146.283z" />
+            <path d="M334.646 334.28c-65.169 65.169-136.697 99.3-159.762 76.235-23.065-23.066 11.066-94.593 76.235-159.762s136.697-99.3 159.762-76.235c23.065 23.065-11.066 94.593-76.235 159.762z" />
+            <path d="M324.923 324.557c-69.806 69.806-146.38 106.411-171.031 81.76-24.652-24.652 11.953-101.226 81.759-171.032 69.806-69.806 146.38-106.411 171.031-81.76 24.652 24.653-11.953 101.226-81.759 171.032z" />
+            <path d="M312.99 312.625c-73.222 73.223-153.555 111.609-179.428 85.736-25.872-25.872 12.514-106.205 85.737-179.428s153.556-111.609 179.429-85.737c25.872 25.873-12.514 106.205-85.737 179.429z" />
+            <path d="M300.175 299.808c-75.909 75.909-159.11 115.778-185.837 89.052-26.726-26.727 13.143-109.929 89.051-185.837 75.908-75.908 159.11-115.778 185.837-89.051 26.726 26.726-13.143 109.928-89.051 185.836z" />
+            <path d="M284.707 284.34c-77.617 77.617-162.303 118.773-189.152 91.924-26.848-26.848 14.308-111.534 91.924-189.15C265.096 109.496 349.782 68.34 376.63 95.188c26.849 26.849-14.307 111.535-91.923 189.151z" />
+            <path d="M269.239 267.989c-78.105 78.104-163.187 119.656-190.035 92.807-26.849-26.848 14.703-111.93 92.807-190.035 78.105-78.104 163.187-119.656 190.035-92.807 26.849 26.848-14.703 111.93-92.807 190.035z" />
+            <path d="M252.887 252.52C175.27 330.138 90.584 371.294 63.736 344.446 36.887 317.596 78.043 232.91 155.66 155.293 233.276 77.677 317.962 36.521 344.81 63.37c26.85 26.848-14.307 111.534-91.923 189.15z" />
+            <path d="M236.977 236.61C161.069 312.52 77.867 352.389 51.14 325.663c-26.726-26.727 13.143-109.928 89.052-185.837 75.908-75.908 159.11-115.777 185.836-89.05 26.727 26.726-13.143 109.928-89.051 185.836z" />
+            <path d="M221.067 220.7C147.844 293.925 67.51 332.31 41.639 306.439c-25.873-25.873 12.513-106.206 85.736-179.429C200.6 53.786 280.931 15.4 306.804 41.272c25.872 25.873-12.514 106.206-85.737 179.429z" />
+            <path d="M205.157 204.79c-69.806 69.807-146.38 106.412-171.031 81.76-24.652-24.652 11.953-101.225 81.759-171.031 69.806-69.807 146.38-106.411 171.031-81.76 24.652 24.652-11.953 101.226-81.759 171.032z" />
+            <path d="M189.247 188.881c-65.169 65.169-136.696 99.3-159.762 76.235-23.065-23.065 11.066-94.593 76.235-159.762s136.697-99.3 159.762-76.235c23.065 23.065-11.066 94.593-76.235 159.762z" />
+            <path d="M173.337 172.971c-59.799 59.8-125.292 91.26-146.282 70.269-20.991-20.99 10.47-86.484 70.268-146.283 59.8-59.799 125.292-91.26 146.283-70.269 20.99 20.991-10.47 86.484-70.269 146.283z" />
+            <path d="M157.427 157.061c-53.209 53.21-111.578 81.108-130.372 62.314-18.794-18.794 9.104-77.164 62.313-130.373 53.21-53.209 111.58-81.108 130.373-62.314 18.794 18.794-9.105 77.164-62.314 130.373z" />
+            <path d="M141.517 141.151c-44.91 44.91-94.376 68.259-110.485 52.15-16.11-16.11 7.239-65.576 52.15-110.486 44.91-44.91 94.375-68.258 110.485-52.15 16.109 16.11-7.24 65.576-52.15 110.486z" />
+            <path d="M125.608 125.241c-35.88 35.88-75.255 54.677-87.947 41.985-12.692-12.692 6.105-52.067 41.985-87.947C115.525 43.4 154.9 24.603 167.592 37.295c12.692 12.692-6.105 52.067-41.984 87.946z" />
+            <path d="M109.698 109.332c-24.408 24.407-51.12 37.268-59.663 28.726-8.542-8.543 4.319-35.255 28.727-59.662 24.407-24.408 51.12-37.27 59.662-28.727 8.543 8.543-4.319 35.255-28.726 59.663z" />
+          </svg>
+        </div>
 
-            {/* Center title - SVG text with drawable animation */}
-            <div className="center-title-container absolute inset-0 flex items-center justify-center pointer-events-none">
-              {/* Subtle glow effect behind text */}
-              <div className="absolute w-48 h-32 bg-white/5 rounded-full blur-3xl" />
-              
-              {/* SVG Text that draws in */}
-              <svg 
-                ref={textSvgRef}
-                viewBox="0 0 200 80" 
-                className="w-64 md:w-72 lg:w-80"
-              >
-                <defs>
-                  <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#ffffff" />
-                    <stop offset="100%" stopColor="#e0e0e0" />
-                  </linearGradient>
-                </defs>
-                {/* Mind */}
-                <text
-                  className="draw-text"
-                  x="100"
-                  y="35"
-                  textAnchor="middle"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="0.3"
-                  fontSize="40"
-                  fontWeight="bold"
-                  fontFamily="var(--font-wage), sans-serif"
-                >
-                  Mind
-                </text>
-                {/* Goblin */}
-                <text
-                  className="draw-text"
-                  x="100"
-                  y="68"
-                  textAnchor="middle"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="0.3"
-                  fontSize="40"
-                  fontWeight="bold"
-                  fontFamily="var(--font-wage), sans-serif"
-                >
-                  Goblin
-                </text>
-              </svg>
-            </div>
-          </div>
-
-          {/* Bottom buttons */}
-          <div className="bottom-buttons absolute bottom-12 left-8 md:left-16 lg:left-24 flex gap-4 z-20">
-            <button 
-              onClick={handleShowGames}
-              className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-2 group"
-            >
-              <span className="text-sm font-medium">Our Games</span>
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </button>
-            <button 
-              onClick={handleOpenContact}
-              className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all flex items-center gap-2 group"
-            >
-              <span className="text-sm font-medium">Contact Us</span>
-              <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Social Media Links */}
-          <div className="social-links absolute bottom-12 right-8 md:right-16 lg:right-24 flex gap-4 z-20">
-            {/* Instagram */}
-            <a 
-              href="https://www.instagram.com/mindgoblin.gg/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
-              aria-label="Instagram"
-            >
-              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </a>
-
-            {/* Twitter/X */}
-            <a 
-              href="https://x.com/mindgoblin_gg" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
-              aria-label="Twitter/X"
-            >
-              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-            </a>
-
-            {/* TikTok */}
-            <a 
-              href="https://www.tiktok.com/@mindgoblin.gg" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
-              aria-label="TikTok"
-            >
-              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
-              </svg>
-            </a>
-
-            {/* YouTube */}
-            <a 
-              href="https://www.youtube.com/@mindgoblin_gg" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
-              aria-label="YouTube"
-            >
-              <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-              </svg>
-            </a>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Games View - Three.js Spinning Cube */}
-          <div className="cube-container relative w-[500px] h-[500px] md:w-[600px] md:h-[600px] lg:w-[700px] lg:h-[700px]">
-            <ThreeCube className="w-full h-full" />
-            
-            {/* "Games" text overlay */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h2 className="games-title-text text-5xl md:text-6xl font-bold text-white title-font opacity-0 drop-shadow-lg"
-                style={{ textShadow: '0 0 20px rgba(255,75,75,0.5)' }}
-              >
-                Games
-              </h2>
-            </div>
-          </div>
-
-          {/* Coming Soon text */}
-          <div className="absolute bottom-32 left-1/2 -translate-x-1/2 text-center">
-            <p className="games-title-text text-xl text-gray-400 opacity-0">
-              Coming Soon...
-            </p>
-          </div>
-
-          {/* Back button */}
-          <button 
-            onClick={handleBackToHome}
-            className="back-button absolute bottom-12 left-1/2 -translate-x-1/2 px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-red-500 hover:text-white hover:bg-red-500/10 transition-all flex items-center gap-2 group"
+        {/* Center title container - both texts, toggle visibility */}
+        <div className="center-title-container absolute inset-0 flex items-center justify-center pointer-events-none">
+          {/* Subtle glow effect behind text */}
+          <div className="absolute w-48 h-32 bg-white/5 rounded-full blur-3xl" />
+          
+          {/* Mind Goblin Text - shown when not in games mode */}
+          <svg 
+            ref={textSvgRef}
+            viewBox="0 0 200 80" 
+            className="mind-goblin-text w-64 md:w-72 lg:w-80 absolute"
           >
-            <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+            <defs>
+              <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#ffffff" />
+                <stop offset="100%" stopColor="#e0e0e0" />
+              </linearGradient>
+            </defs>
+            <text
+              className="draw-text"
+              x="100"
+              y="35"
+              textAnchor="middle"
+              fill="none"
+              stroke="white"
+              strokeWidth="0.3"
+              fontSize="40"
+              fontWeight="bold"
+              fontFamily="var(--font-wage), sans-serif"
+            >
+              Mind
+            </text>
+            <text
+              className="draw-text"
+              x="100"
+              y="68"
+              textAnchor="middle"
+              fill="none"
+              stroke="white"
+              strokeWidth="0.3"
+              fontSize="40"
+              fontWeight="bold"
+              fontFamily="var(--font-wage), sans-serif"
+            >
+              Goblin
+            </text>
+          </svg>
+
+          {/* Games Text - shown when in games mode */}
+          <h2 
+            className="games-text text-5xl md:text-6xl lg:text-7xl font-bold text-white title-font absolute opacity-0"
+            style={{ fontFamily: 'var(--font-wage), sans-serif' }}
+          >
+            Games
+          </h2>
+        </div>
+      </div>
+
+      {/* Bottom buttons - hidden in games mode */}
+      {!isGamesMode && (
+        <div className="bottom-buttons absolute bottom-12 left-8 md:left-16 lg:left-24 flex gap-4 z-20">
+          <button 
+            onClick={handleShowGames}
+            className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-2 group"
+          >
+            <span className="text-sm font-medium">Our Games</span>
+            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-            <span className="text-sm font-medium">Back</span>
           </button>
-        </>
+          <button 
+            onClick={handleOpenContact}
+            className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all flex items-center gap-2 group"
+          >
+            <span className="text-sm font-medium">Contact Us</span>
+            <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </button>
+        </div>
+      )}
+
+      {/* Social Media Links - visible in both modes */}
+      <div className="social-links absolute bottom-12 right-8 md:right-16 lg:right-24 flex gap-4 z-20">
+          <a 
+            href="https://www.instagram.com/mindgoblin.gg/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            aria-label="Instagram"
+          >
+            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <a 
+            href="https://x.com/mindgoblin_gg" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            aria-label="Twitter/X"
+          >
+            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a 
+            href="https://www.tiktok.com/@mindgoblin.gg" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            aria-label="TikTok"
+          >
+            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
+            </svg>
+          </a>
+          <a 
+            href="https://www.youtube.com/@mindgoblin_gg" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-10 h-10 flex items-center justify-center border border-gray-600 text-gray-400 rounded-lg hover:border-[#ff4b4b] hover:text-white hover:bg-[#ff4b4b]/10 transition-all group opacity-0"
+            aria-label="YouTube"
+          >
+            <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+        </div>
+
+      {/* Games mode - Left side text */}
+      {isGamesMode && (
+        <div className="games-left-text absolute left-8 md:left-16 lg:left-24 top-[42%] -translate-y-1/2 z-20 max-w-md opacity-0">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+            The Mind Goblin team<br />
+            is hard at work.
+          </h1>
+          <p className="text-gray-400 text-base md:text-lg">
+            Our team is in the process of building<br />
+            some unique multiplayer games as well<br />
+            as roguelike games.
+          </p>
+        </div>
+      )}
+
+      {/* Games mode - Right side text */}
+      {isGamesMode && (
+        <div className="games-right-text absolute right-8 md:right-16 lg:right-24 top-[42%] -translate-y-1/2 z-20 max-w-sm text-right opacity-0">
+          <p className="text-xl md:text-2xl lg:text-3xl font-light text-white leading-relaxed">
+            ETA on our first game<br />
+            is likely to be released<br />
+            in 2026
+          </p>
+          <p className="text-lg md:text-xl text-gray-500 mt-4 font-light">
+            最初のゲームのリリースは<br />
+            2026年を予定しています
+          </p>
+        </div>
+      )}
+
+      {/* Back button - shown in games mode */}
+      {isGamesMode && (
+        <button 
+          onClick={handleBackToHome}
+          className="back-button absolute bottom-12 left-1/2 -translate-x-1/2 px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-2 group z-20"
+        >
+          <svg className="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+          </svg>
+          <span className="text-sm font-medium">Back</span>
+        </button>
       )}
 
       {/* Futuristic Contact Modal */}
