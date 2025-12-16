@@ -38,7 +38,8 @@ export default function FuturisticHero() {
       const currentTime = timestamp - startTime;
       
       pathAnimations.forEach((animation, i) => {
-        const percent = (1 - Math.sin(i * 0.35 + 0.003 * currentTime)) / 2;
+        // Slowed down further for a more relaxed breathing effect
+        const percent = (1 - Math.sin(i * 0.35 + 0.0008 * currentTime)) / 2;
         animation.seek(animation.duration * percent);
       });
       
@@ -54,16 +55,15 @@ export default function FuturisticHero() {
     });
 
     const introAnimation = createTimeline({
-      autoplay: false,
+      autoplay: true,
     }).add(spherePathEls, {
       strokeDashoffset: 0,
-      duration: 3900,
-      ease: 'inOutCirc',
-      delay: stagger(190, { start: (pathLength - 1) * 190, reversed: true }),
+      duration: 8000,
+      ease: 'inOutSine',
+      delay: stagger(350, { start: 0, reversed: true }),
     }, 0);
 
-    // Start sphere animations
-    introAnimation.play();
+    // Start sphere breathing animation
     breathAnimationId = requestAnimationFrame(breathe);
 
     // Animate the Mind Goblin SVG text drawing
@@ -76,9 +76,9 @@ export default function FuturisticHero() {
         
         animate(drawable, {
           draw: '0 1',
-          duration: 2000,
-          ease: 'inOutQuad',
-          delay: 1000,
+          duration: 6000,
+          ease: 'inOutSine',
+          delay: 2000,
         });
       });
     }
@@ -150,7 +150,7 @@ export default function FuturisticHero() {
       </div>
 
       {/* Center sphere with Mind Goblin */}
-      <div className="relative w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px]">
+      <div className="relative w-[440px] h-[440px] md:w-[565px] md:h-[565px] lg:w-[625px] lg:h-[625px]">
         
         {/* The Sphere Animation */}
         <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center">
@@ -211,8 +211,8 @@ export default function FuturisticHero() {
               textAnchor="middle"
               fill="none"
               stroke="white"
-              strokeWidth="1"
-              fontSize="32"
+                strokeWidth="0.3"
+              fontSize="40"
               fontWeight="bold"
               fontFamily="var(--font-wage), sans-serif"
             >
@@ -226,8 +226,8 @@ export default function FuturisticHero() {
               textAnchor="middle"
               fill="none"
               stroke="white"
-              strokeWidth="1"
-              fontSize="32"
+              strokeWidth="0.3"
+              fontSize="40"
               fontWeight="bold"
               fontFamily="var(--font-wage), sans-serif"
             >
