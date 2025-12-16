@@ -52,9 +52,10 @@ export default function FuturisticHero() {
         
         pathEl.style.stroke = `rgba(${r},${g},${b},${alpha})`;
         
-        // Apply transform based on wave
-        const translateVal = 2 + (percent * -6); // Goes from 2 to -4
-        pathEl.style.transform = `translate(${translateVal}px, ${translateVal}px)`;
+        // Apply transform based on wave - 60% more emphasized
+        const translateVal = 3.5 + (percent * -11); // Goes from 3.5 to -7.5
+        const scaleVal = 1 + (percent * 0.03) - 0.015; // Scale 0.985 to 1.015
+        pathEl.style.transform = `translate(${translateVal}px, ${translateVal}px) scale(${scaleVal})`;
       });
       
       breathAnimationId = requestAnimationFrame(breathe);
