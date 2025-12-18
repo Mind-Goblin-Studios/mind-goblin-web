@@ -479,7 +479,7 @@ export default function Main() {
   };
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex items-center justify-center bg-[#1a1a1a] overflow-hidden">
+    <section ref={containerRef} className="relative min-h-screen flex items-center justify-center bg-[#1a1a1a] overflow-hidden max-md:landscape:min-h-[100dvh]">
       {/* Background grid pattern */}
       <div className="absolute inset-0 opacity-[0.07]">
         <div className="absolute inset-0" style={{
@@ -493,7 +493,7 @@ export default function Main() {
         href="https://store.steampowered.com/developer/mindgoblin/"
         target="_blank"
         rel="noopener noreferrer"
-        className="steam-button absolute top-4 md:top-8 left-4 md:left-16 lg:left-24 px-2 py-1.5 md:px-4 md:py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-[#1b2838] hover:text-white hover:bg-[#1b2838] transition-all flex items-center gap-1.5 md:gap-2 group z-20 opacity-0"
+        className="steam-button absolute top-4 md:top-8 left-4 md:left-16 lg:left-24 max-md:landscape:top-2 max-md:landscape:left-4 px-2 py-1.5 md:px-4 md:py-2 max-md:landscape:px-2 max-md:landscape:py-1 border border-gray-600 text-gray-300 rounded-lg hover:border-[#1b2838] hover:text-white hover:bg-[#1b2838] transition-all flex items-center gap-1.5 md:gap-2 group z-20 opacity-0"
       >
         <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
           <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658a3.387 3.387 0 0 1 1.912-.59c.064 0 .125.004.188.006l2.861-4.142V8.91a4.528 4.528 0 0 1 4.524-4.524c2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.606 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303a3.019 3.019 0 0 0-3.015-3.015 3.019 3.019 0 0 0-3.015 3.015 3.019 3.019 0 0 0 3.015 3.015 3.019 3.019 0 0 0 3.015-3.015zm-5.273-.005c0-1.248 1.013-2.262 2.261-2.262a2.263 2.263 0 0 1 0 4.525c-1.248 0-2.261-1.014-2.261-2.263z"/>
@@ -504,8 +504,8 @@ export default function Main() {
 
       {/* Left side text - hidden in games mode */}
       {!isGamesMode && (
-        <div className="absolute left-1/2 -translate-x-1/2 md:left-16 lg:left-24 md:translate-x-0 top-16 md:top-1/2 md:-translate-y-1/2 z-20 max-w-md text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-2 md:mb-6">
+        <div className="absolute left-1/2 -translate-x-1/2 md:left-16 lg:left-24 md:translate-x-0 top-16 md:top-1/2 md:-translate-y-1/2 max-md:landscape:left-4 max-md:landscape:translate-x-0 max-md:landscape:top-1/2 max-md:landscape:-translate-y-1/2 z-20 max-w-md text-center md:text-left max-md:landscape:text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-md:landscape:text-xl font-bold text-white leading-tight mb-2 md:mb-6 max-md:landscape:mb-1">
             <span className="hero-text-line block opacity-0">Game</span>
             <span className="hero-text-line block opacity-0">development</span>
             <span className="hero-text-line block opacity-0">studio.</span>
@@ -519,8 +519,8 @@ export default function Main() {
 
       {/* Right side text - hidden in games mode, below sphere on mobile */}
       {!isGamesMode && (
-        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-16 lg:right-24 bottom-28 md:bottom-auto md:top-1/2 md:-translate-y-1/2 z-20 max-w-sm text-center md:text-right">
-          <p className="right-text text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-white leading-relaxed opacity-0">
+        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-16 lg:right-24 bottom-28 md:bottom-auto md:top-1/2 md:-translate-y-1/2 max-md:landscape:left-auto max-md:landscape:right-4 max-md:landscape:translate-x-0 max-md:landscape:bottom-auto max-md:landscape:top-1/2 max-md:landscape:-translate-y-1/2 z-20 max-w-sm text-center md:text-right max-md:landscape:text-right">
+          <p className="right-text text-lg sm:text-xl md:text-2xl lg:text-3xl max-md:landscape:text-sm font-light text-white leading-relaxed opacity-0">
             Creatives crafting new<br />
             and exciting titles
           </p>
@@ -532,7 +532,7 @@ export default function Main() {
       )}
 
       {/* Center sphere - always visible */}
-      <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px] z-10">
+      <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[550px] md:h-[550px] lg:w-[650px] lg:h-[650px] max-md:landscape:w-[220px] max-md:landscape:h-[220px] z-10">
         
         {/* The Sphere Animation */}
         <div ref={sphereRef} className="absolute inset-0 flex items-center justify-center z-10">
@@ -659,7 +659,7 @@ export default function Main() {
           <svg 
             ref={textSvgRef}
             viewBox="0 0 200 80" 
-            className="mind-goblin-text w-40 sm:w-52 md:w-72 lg:w-80 absolute"
+            className="mind-goblin-text w-40 sm:w-52 md:w-72 lg:w-80 max-md:landscape:w-32 absolute"
             style={{ 
               opacity: 0, 
               visibility: 'hidden',
@@ -704,7 +704,7 @@ export default function Main() {
 
           {/* Games Text - shown when in games mode */}
           <h2 
-            className="games-text text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white absolute"
+            className="games-text text-3xl sm:text-4xl md:text-6xl lg:text-7xl max-md:landscape:text-2xl font-bold text-white absolute"
             style={{ fontFamily: 'Inter, system-ui, sans-serif', opacity: 0, visibility: 'hidden' }}
           >
             Games
@@ -714,7 +714,7 @@ export default function Main() {
 
       {/* Bottom buttons - hidden in games mode */}
       {!isGamesMode && (
-        <div className="bottom-buttons absolute bottom-8 md:bottom-12 left-4 md:left-16 lg:left-24 flex gap-2 md:gap-4 z-20">
+        <div className="bottom-buttons absolute bottom-8 md:bottom-12 left-4 md:left-16 lg:left-24 max-md:landscape:bottom-2 max-md:landscape:left-4 flex gap-2 md:gap-4 z-20">
           <button 
             onClick={handleShowGames}
             className="px-3 py-2 md:px-6 md:py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-1 md:gap-2 group"
@@ -737,7 +737,7 @@ export default function Main() {
       )}
 
       {/* Social Media Links - visible in both modes */}
-      <div className="social-links absolute bottom-8 md:bottom-12 right-2 md:right-16 lg:right-24 grid grid-cols-2 gap-1 sm:flex sm:gap-1 md:gap-4 z-20">
+      <div className="social-links absolute bottom-8 md:bottom-12 right-2 md:right-16 lg:right-24 max-md:landscape:bottom-2 max-md:landscape:right-4 grid grid-cols-2 gap-1 sm:flex sm:gap-1 md:gap-4 max-md:landscape:flex z-20">
           <a 
             href="https://www.instagram.com/mindgoblin.gg/" 
             target="_blank" 
@@ -787,9 +787,16 @@ export default function Main() {
       {/* Games mode - Left side text (top on mobile) */}
       {isGamesMode && (
         <>
-          {/* Mobile version - centered at top */}
-          <div className="games-left-text absolute inset-x-0 top-24 z-20 flex justify-center md:hidden opacity-0 px-4">
+          {/* Mobile portrait version - centered at top */}
+          <div className="games-left-text absolute inset-x-0 top-24 z-20 flex justify-center md:hidden max-md:landscape:hidden opacity-0 px-4">
             <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight text-center">
+              The Mind Goblin team<br />
+              is hard at work.
+            </h1>
+          </div>
+          {/* Mobile landscape version - left side */}
+          <div className="games-left-text absolute left-4 top-1/2 -translate-y-1/2 z-20 max-w-[200px] text-left opacity-0 hidden max-md:landscape:block">
+            <h1 className="text-base font-bold text-white leading-tight">
               The Mind Goblin team<br />
               is hard at work.
             </h1>
@@ -812,10 +819,16 @@ export default function Main() {
       {/* Games mode - Right side text (bottom on mobile) */}
       {isGamesMode && (
         <>
-          {/* Mobile version - centered at bottom */}
-          <div className="games-right-text absolute inset-x-0 bottom-24 z-20 flex justify-center md:hidden opacity-0 px-4">
+          {/* Mobile portrait version - centered at bottom */}
+          <div className="games-right-text absolute inset-x-0 bottom-24 z-20 flex justify-center md:hidden max-md:landscape:hidden opacity-0 px-4">
             <p className="text-base sm:text-lg font-light text-white leading-relaxed text-center max-w-xs">
               ETA on our first game is likely to be released in 2026
+            </p>
+          </div>
+          {/* Mobile landscape version - right side */}
+          <div className="games-right-text absolute right-4 top-1/2 -translate-y-1/2 z-20 max-w-[200px] text-right opacity-0 hidden max-md:landscape:block">
+            <p className="text-sm font-light text-white leading-relaxed">
+              First game releasing<br />in 2026
             </p>
           </div>
           {/* Desktop version - right aligned */}
@@ -835,7 +848,7 @@ export default function Main() {
       {isGamesMode && (
         <button 
           onClick={handleBackToHome}
-          className="back-button absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 px-4 py-2 md:px-6 md:py-3 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-1.5 md:gap-2 group z-20"
+          className="back-button absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 max-md:landscape:bottom-2 px-4 py-2 md:px-6 md:py-3 max-md:landscape:px-3 max-md:landscape:py-1.5 border border-gray-600 text-gray-300 rounded-lg hover:border-purple-500 hover:text-white hover:bg-purple-500/10 transition-all flex items-center gap-1.5 md:gap-2 group z-20"
         >
           <svg className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
